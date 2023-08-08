@@ -1,6 +1,6 @@
-import { createVuetify, ThemeDefinition } from 'vuetify'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
+import { createVuetify, ThemeDefinition } from "vuetify"
+import * as components from "vuetify/components"
+import * as directives from "vuetify/directives"
 import { aliases, mdi } from "vuetify/iconsets/mdi"
 
 const myCustomLightTheme = {
@@ -20,11 +20,10 @@ const myCustomLightTheme = {
   }
 }
 
-
-export default defineNuxtPlugin(nuxtApp => {
+export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
     icons: {
-      defaultSet: 'mdi',
+      defaultSet: "mdi",
       aliases,
       sets: {
         mdi

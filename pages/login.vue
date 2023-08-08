@@ -52,10 +52,13 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '~/store/auth';
+
 const dataForm = reactive({
   password: "",
   email: ""
 })
+const authStore = useAuthStore();
 
 const showPassword = ref(false)
 
@@ -70,13 +73,10 @@ const passwordRules = [
     (value && value.length >= 8) ||
     "La contraseña debe tener al menos 8 caracteres"
 ]
-const login = () => {
-  console.log(dataForm)
+const login = async() => {
+  await authStore.login(dataForm.email, dataForm.password)
 }
 
-definePageMeta({
-  layout: "unauthorized"
-})
 </script>
 
 <style lang="postcss" scoped>

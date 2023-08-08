@@ -5,9 +5,7 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  layout: "authorized",
-});
+
 </script>
 
 <style scoped>

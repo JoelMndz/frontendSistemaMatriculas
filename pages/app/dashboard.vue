@@ -8,10 +8,6 @@
 <script setup lang="ts">
 import {useAuthStore} from "~/store/auth";
 
-definePageMeta({
-  layout: "authorized",
-});
-
 
 const authStore = useAuthStore()
 //NO TOCAR

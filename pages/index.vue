@@ -234,9 +234,6 @@ export default {
     show: false
   })
 }
-definePageMeta({
-  layout: "unauthorized"
-})
 </script>
 
 <style lang="postcss" scoped>

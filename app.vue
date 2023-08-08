@@ -5,8 +5,11 @@
 </template>
 
 <script setup lang="ts">
+const authStore = useAuthStore()
+const layout = computed(()=>{
+  return authStore.isAuthenticated ? "authorized":"unauthorized"
+});
 
-const layout = "unauthorized";
 </script>
 
 <style scoped>

@@ -1,9 +1,7 @@
 <template>
   <div>
     <h2>Dashboard</h2>
-    <span>{{ authStore.counter }}</span>
-    <button @click="authStore.data.length == 0?authStore.loadData():authStore.eliminar()">Incrementar</button>
-    <pre>{{ authStore.data }}</pre>
+    <pre>{{ data2 }}</pre>
   </div>
 </template>
 
@@ -14,21 +12,24 @@ definePageMeta({
   layout: "authorized",
 });
 
+
 const authStore = useAuthStore()
-const data = useState('data',()=>authStore.data)
+//NO TOCAR
+const data2 = computed(()=>authStore.data)
+await authStore.loadData()
 //await authStore.loadData()
-// await useAsyncData('qq',authStore.loadData);
-const dataReactiva = computed(()=>authStore.data)
+// const {data} = await useLazyFetch('https://api.nuxtjs.dev/mountains')
+// console.log('okkk',data.value);
+// authStore.setData(data)
+// watch(data,()=>{
+//   console.log('Daata cambio',data);  
+// })
 // const { data, pending, error, refresh } = await useAsyncData(
 //   'mountains',
 //   () => $fetch('https://api.nuxtjs.dev/mountains')
 // )
-
 onMounted(async()=>{
-  await authStore.loadData()
-  //await authStore.loadData()
-  console.log('Mounted');
-  
+  //await useFetch('https://api.nuxtjs.dev/mountains?a=1')
 })
 
 </script>

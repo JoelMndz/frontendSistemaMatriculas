@@ -17,9 +17,10 @@ export const useAuthStore = defineStore('auth',{
   }),
   actions:{
     async loadData(){
+      // const {data} = await useFetch('https://api.nuxtjs.dev/mountains',{server:false})
       const {data} = await useLazyFetch('https://api.nuxtjs.dev/mountains')
       this.data = data;
-      console.log(this.data);
+      // console.log(this.data);
       
     },
     aumentar(){
@@ -27,6 +28,9 @@ export const useAuthStore = defineStore('auth',{
     },
     eliminar(){
       this.data = [];
+    },
+    setData(data:any){
+      this.data = data;
     }
   }
 })

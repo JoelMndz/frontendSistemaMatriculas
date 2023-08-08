@@ -1,0 +1,63 @@
+<template>
+  <VNavigationDrawer
+    expand-on-hover
+    rail
+    permanent
+  >
+    <VListItem
+      prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
+      title="Tommy Precidio"
+      nav
+    >
+    </VListItem>
+
+    <VDivider />
+
+    <VList>
+      <VListItem 
+        v-for="i in items"
+        :key="i.name"
+        link
+        :to="i.route"
+        :prepend-icon="i.icon" 
+        :title="i.name" 
+        :value="i.name"
+        @click="$router.push(i.route)"/>
+    </VList>
+
+  </VNavigationDrawer>
+</template>
+
+<script setup lang="ts">
+const items = [
+  {
+    name: 'Dashboard',
+    route:'/app/dashboard',
+    icon:'mdi-home-city'
+  },
+  {
+    name: 'Estudiantes',
+    route:'/app/estudiante',
+    icon:'mdi-home-city'
+  },
+  {
+    name: 'Profesores',
+    route:'/app/estudiante',
+    icon:'mdi-home-city'
+  },
+  {
+    name: 'Matrícula',
+    route:'/app/estudiante',
+    icon:'mdi-home-city'
+  },
+  {
+    name: 'Curso',
+    route:'/app/estudiante',
+    icon:'mdi-home-city'
+  }
+]
+</script>
+
+<style scoped>
+
+</style>

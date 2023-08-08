@@ -77,6 +77,10 @@ const passwordRules = [
 const login = () => {
   console.log(dataForm)
 }
+
+definePageMeta({
+  layout: "unauthorized"
+})
 </script>
 
 <style scoped></style>

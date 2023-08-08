@@ -1,45 +1,54 @@
 <template>
-  <v-form
-    @submit="login"
-    class="mt-5"
-  >
-    <v-container>
-      <h3 class="text-center">Inicio de sesion</h3>
-
-      <v-row class="mt-5">
-        <v-col
-          cols="12"
-          md="6"
-          offset-md="3"
-        >
-          <v-text-field
-            v-model="dataForm.email"
-            type="email"
-            label="Correo"
-            :rules="emailRules"
-            required
-          ></v-text-field>
-
-          <v-text-field
-            class="mt-3"
-            v-model="dataForm.password"
-            :type="showPassword ? 'text' : 'password'"
-            :rules="passwordRules"
-            label="Contraseña"
-            required
-          ></v-text-field>
-          <v-btn
-            color="primary"
-            @click="login"
-            >Iniciar sesión</v-btn
+  <v-container>
+    <div class="centrarDiv">
+      <v-form @submit="login">
+        <h3 class="text-center">Inicio de sesion</h3>
+        <div class="mt-4">
+          <v-card
+            width="420"
+            class="border"
           >
-          <div class="mt-3">
-            <NuxtLink class="text-decoration-none" to="/">Registrar administrador</NuxtLink>
-          </div>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-form>
+            <div class="centrarForm mt-3">
+              <div class="inputs">
+                <v-text-field
+                  v-model="dataForm.email"
+                  type="email"
+                  label="Correo"
+                  :rules="emailRules"
+                  required
+                />
+              </div>
+
+              <div class="inputs">
+                <v-text-field
+                  class="mt-3"
+                  v-model="dataForm.password"
+                  :type="showPassword ? 'text' : 'password'"
+                  :rules="passwordRules"
+                  label="Contraseña"
+                  required
+                />
+              </div>
+              <v-btn
+                class="mt-4"
+                color="primary"
+                width="400"
+                @click="login"
+                >Iniciar sesión</v-btn
+              >
+              <div class="mt-3">
+                <NuxtLink
+                  class="text-decoration-none"
+                  to="/"
+                  >Registrar administrador</NuxtLink
+                >
+              </div>
+            </div>
+          </v-card>
+        </div>
+      </v-form>
+    </div>
+  </v-container>
 </template>
 
 <script setup lang="ts">
@@ -64,4 +73,23 @@ const passwordRules = [
 const login = () => {
   console.log(dataForm)
 }
+
+definePageMeta({
+  layout: "unauthorized"
+})
 </script>
+
+<style lang="postcss" scoped>
+.inputs {
+  width: 400px;
+}
+.centrarForm {
+  display: grid;
+  place-items: center;
+}
+.centrarDiv {
+  display: grid;
+  place-items: center;
+  height: 80vh;
+}
+</style>

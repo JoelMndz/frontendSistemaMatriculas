@@ -51,14 +51,6 @@
             width="400"
             >Regitrar</v-btn
           >
-
-          <div class="mt-3">
-            <NuxtLink
-              class="text-decoration-none"
-              to="/"
-              >Iniciar Sesion</NuxtLink
-            >
-          </div>
         </v-form>
       </VCard>
     </div>

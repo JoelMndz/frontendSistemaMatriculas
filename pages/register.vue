@@ -1,56 +1,68 @@
 <template>
-  <v-form
-    @submit="login"
-    class="mt-5"
-  >
-    <v-container>
-      <h3 class="text-center">Registrate Ahora</h3>
+  <v-container>
+    <div class="centrarDiv">
+      <VCard
+        elevation="5"
+        class="pa-5"
+        width="400"
+      >
+        <h3 class="text-center">Registrate Ahora</h3>
 
-      <v-row class="mt-5">
-        <v-col
-          cols="12"
-          md="6"
-          offset-md="3">
+        <v-form
+          @submit="register"
+          class="mt-5"
+          fast-fail
+        >
           <v-text-field
             v-model="dataForm.name"
             label="Nombres"
+            variant="underlined"
             required
-          ></v-text-field>
+          />
 
           <v-text-field
             v-model="dataForm.lastname"
             label="Apellidos"
-            required/>
+            variant="underlined"
+            required
+          />
           <v-text-field
             v-model="dataForm.email"
             type="email"
             label="Correo"
+            variant="underlined"
             :rules="emailRules"
-            required/>
+            required
+          />
 
           <v-text-field
             class="mt-3"
             v-model="dataForm.password"
+            variant="underlined"
             :type="showPassword ? 'text' : 'password'"
             :rules="passwordRules"
             label="Contraseña"
-            required/>
+            required
+          />
 
           <v-btn
             color="primary"
-            @click="login"
-            >Regitrar</v-btn>
+            @click="register"
+            width="400"
+            >Regitrar</v-btn
+          >
 
           <div class="mt-3">
             <NuxtLink
               class="text-decoration-none"
               to="/"
-              >Iniciar Sesion</NuxtLink>
+              >Iniciar Sesion</NuxtLink
+            >
           </div>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-form>
+        </v-form>
+      </VCard>
+    </div>
+  </v-container>
 </template>
 
 <script setup lang="ts">
@@ -74,9 +86,15 @@ const passwordRules = [
     (value && value.length >= 8) ||
     "La contraseña debe tener al menos 8 caracteres"
 ]
-const login = () => {
+const register = () => {
   console.log(dataForm)
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.centrarDiv {
+  display: grid;
+  place-items: center;
+  height: 80vh;
+}
+</style>

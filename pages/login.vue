@@ -5,6 +5,7 @@
         elevation="5"
         class="pa-5">
         <VCardTitle class="text-center">Inicio de sesion</VCardTitle>
+        <Error/>
         <v-form 
           ref="form"
           fast-fail 
@@ -43,7 +44,6 @@
 <script setup lang="ts">
 import { VCardTitle, VForm } from 'vuetify/lib/components/index.mjs';
 
-
 const form = ref<VForm |null>(null);
 const dataForm = reactive({
   email: "admin@gmail.com",
@@ -52,7 +52,7 @@ const dataForm = reactive({
 const loading = ref(false);
 const authStore = useAuthStore();
 const showPassword = ref(false);
-const router = useRouter();
+const {resetError} = useErrorStore();
 
 const emailRules = [
   (value: any) => !!value || "El correo es requerido",
@@ -69,12 +69,15 @@ const login = async() => {
   loading.value = true
   const {valid} = await form.value!.validate();
   if(!valid) return;
+  resetError()
   await authStore.login(dataForm.email, dataForm.password)
   loading.value = false
   await navigateTo('/app/dashboard')
 }
 
-
+onUnmounted(()=>{
+  resetError()
+})
 </script>
 
 <style scoped>

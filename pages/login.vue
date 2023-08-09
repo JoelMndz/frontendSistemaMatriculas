@@ -36,6 +36,9 @@
               >Iniciar sesión</v-btn
             >
         </v-form>
+        <VCardActions>
+          <NuxtLink to="/register">Registrarse como administrador</NuxtLink>
+        </VCardActions>
       </VCard>
     </div>
   </v-container>

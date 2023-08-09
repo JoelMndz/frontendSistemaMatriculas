@@ -229,14 +229,11 @@
 </template>
 
 <script>
-export default {
-  data: () => ({
-    show: false
-  })
-}
+const show = ref(false)
+
 </script>
 
-<style lang="postcss" scoped>
+<style scoped>
 .secctionHome {
   font-size: 5rem;
   color: #bdb1f7;

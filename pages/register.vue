@@ -77,7 +77,6 @@ const passwordRules = [
 const login = () => {
   console.log(dataForm)
 }
-
 </script>
 
 <style scoped></style>

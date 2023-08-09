@@ -13,7 +13,7 @@ export const useAuthStore = defineStore('auth',{
   }),
   getters:{
     isAuthenticated(state){
-      return !!state.user
+      return !!useCookie('token').value
     }
   },
   actions:{
@@ -27,25 +27,14 @@ export const useAuthStore = defineStore('auth',{
       if(!error.value){
         const token = useCookie('token');
         token.value = response.token        
-        this.user = response.user;
-        console.log(this.user);
-        console.log(this.isAuthenticated);        
+        this.user = response.user;    
+        
       }
     },
-    async loadData(){
-      // const {data} = await useFetch('https://api.nuxtjs.dev/mountains',{server:false})
-      const {data} = await useLazyFetch('https://api.nuxtjs.dev/mountains')
-      this.data = data;
-      
-    },
-    aumentar(){
-      this.counter++;
-    },
-    eliminar(){
-      this.data = [];
-    },
-    setData(data:any){
-      this.data = data;
+    logout(){
+      const token = useCookie('token')
+      token.value = null;
+      this.user = null;
     }
   }
 })

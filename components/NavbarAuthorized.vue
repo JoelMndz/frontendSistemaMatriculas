@@ -9,15 +9,23 @@
 
 
     <template v-slot:append>
+      <VBtn @click="logout()">Cerrar sesión</VBtn>
       <VBtn :icon="iconTheme" @click="changeTheme()" />
     </template>
   </VAppBar>
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { useTheme } from 'vuetify/lib/framework.mjs';
 const theme = useTheme();
 
+const authStore = useAuthStore()
+
+const logout = ()=>{
+  authStore.logout()
+  navigateTo('/')
+}
 const changeTheme = () => {
   theme.global.name.value = theme.global.name.value === 'dark' ? 'light' : 'dark'
 }

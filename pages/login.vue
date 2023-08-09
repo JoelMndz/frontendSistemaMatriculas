@@ -1,66 +1,58 @@
 <template>
   <v-container>
     <div class="centrarDiv">
-      <v-form @submit="login">
-        <h3 class="text-center">Inicio de sesion</h3>
-        <div class="mt-4">
-          <v-card
-            width="420"
-            class="border"
-          >
-            <div class="centrarForm mt-3">
-              <div class="inputs">
-                <v-text-field
-                  v-model="dataForm.email"
-                  type="email"
-                  label="Correo"
-                  :rules="emailRules"
-                  required
-                />
-              </div>
-
-              <div class="inputs">
-                <v-text-field
-                  class="mt-3"
-                  v-model="dataForm.password"
-                  :type="showPassword ? 'text' : 'password'"
-                  :rules="passwordRules"
-                  label="Contraseña"
-                  required
-                />
-              </div>
-              <v-btn
-                class="mt-4"
-                color="primary"
-                width="400"
-                @click="login"
-                >Iniciar sesión</v-btn
-              >
-              <div class="mt-3">
-                <NuxtLink
-                  class="text-decoration-none"
-                  to="/"
-                  >Registrar administrador</NuxtLink
-                >
-              </div>
-            </div>
-          </v-card>
-        </div>
-      </v-form>
+      <VCard
+        elevation="5"
+        class="pa-5">
+        <VCardTitle class="text-center">Inicio de sesion</VCardTitle>
+        <v-form 
+          ref="form"
+          fast-fail 
+          @submit="login">
+          <v-text-field
+            variant="underlined"
+            v-model="dataForm.email"
+            type="email"
+            label="Correo"
+            :rules="emailRules"
+            required
+            />
+          <v-text-field
+            variant="underlined"
+            class="mt-3"
+            v-model="dataForm.password"
+            :type="showPassword ? 'text' : 'password'"
+            :rules="passwordRules"
+            label="Contraseña"
+            required
+          />
+            <v-btn
+              class="mt-4"
+              color="primary"
+              width="400"
+              :loading="loading"
+              @click="login"
+              >Iniciar sesión</v-btn
+            >
+        </v-form>
+      </VCard>
     </div>
   </v-container>
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '~/store/auth';
+import { VCardTitle, VForm } from 'vuetify/lib/components/index.mjs';
 
+
+const form = ref<VForm |null>(null);
 const dataForm = reactive({
-  password: "",
-  email: ""
+  email: "admin@gmail.com",
+  password: "12345678",
 })
+const loading = ref(false);
 const authStore = useAuthStore();
-
-const showPassword = ref(false)
+const showPassword = ref(false);
+const router = useRouter();
 
 const emailRules = [
   (value: any) => !!value || "El correo es requerido",
@@ -74,19 +66,18 @@ const passwordRules = [
     "La contraseña debe tener al menos 8 caracteres"
 ]
 const login = async() => {
+  loading.value = true
+  const {valid} = await form.value!.validate();
+  if(!valid) return;
   await authStore.login(dataForm.email, dataForm.password)
+  loading.value = false
+  await navigateTo('/app/dashboard')
 }
+
 
 </script>
 
-<style lang="postcss" scoped>
-.inputs {
-  width: 400px;
-}
-.centrarForm {
-  display: grid;
-  place-items: center;
-}
+<style scoped>
 .centrarDiv {
   display: grid;
   place-items: center;

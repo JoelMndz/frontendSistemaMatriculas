@@ -1,0 +1,109 @@
+<template>
+  <v-container>
+    <div class="centrarDiv">
+      <VCard
+        elevation="5"
+        class="pa-5"
+      >
+        <VCardTitle class="text-center">
+        {{ schoolTermObjectId ? "Actualizar Periodo" : "Crear Periodo"}}
+        </VCardTitle>
+        <v-form
+          ref="form"
+          fast-fail
+          @submit="schoolTermObjectId ? updateSchoolTerm : createSchoolTerm"
+        >
+          <v-text-field
+            variant="underlined"
+            v-model="dataForm.name"
+            label="Nombre Periodo"
+            :rules="nameRules"
+            required
+          />
+
+          <v-text-field
+            variant="underlined"
+            class="mt-3"
+            v-model="dataForm.description"
+            label="Descripcion"
+            required
+          />
+          <v-card-actions>
+            <v-btn
+              color="blue-darken-1"
+              variant="text"
+              @click="closeModal"
+              width="200"
+            >
+              Cerrar
+            </v-btn>
+            <v-btn
+              width="200"
+              color="blue-darken-1"
+              variant="text"
+              @click="schoolTermObjectId ? updateSchoolTerm() : createSchoolTerm()"
+            >
+              {{ schoolTermObjectId ? "Actualizar" : "Crear"  }}
+            </v-btn>
+          </v-card-actions>
+        </v-form>
+      </VCard>
+    </div>
+  </v-container>
+</template>
+
+<script lang="ts" setup>
+import { ISchoolTerm } from "types";
+import { VCardTitle, VForm } from "vuetify/lib/components/index.mjs"
+const schoolTerm = useSchoolTerm()
+
+const props = defineProps({
+  schoolTerm: Object as () => ISchoolTerm,
+  closeModal: Function
+})
+
+const schoolTermObjectId = props.schoolTerm?._id
+
+const form = ref<VForm | null>(null)
+const dataForm = reactive({
+  name: props.schoolTerm?.name || '',
+  description: props.schoolTerm?.description || ''
+})
+
+const nameRules = [(value: any) => !!value || "El periodo es requerido"]
+
+const createSchoolTerm = async () => {
+  try {
+    const { valid } = await form.value!.validate()
+    if (!valid) return
+    await schoolTerm.create(dataForm)
+    await navigateTo("/app/dashboard")
+  } catch (error) {
+    console.log(error)
+  } finally {
+    await schoolTerm.getAll()
+  }
+}
+
+const updateSchoolTerm = async () => {
+  try {
+    if(schoolTermObjectId) {
+      await schoolTerm.update(schoolTermObjectId, dataForm)
+    }
+    await navigateTo("/app/dashboard")
+  } catch (error) {
+    console.log(error)
+  } finally {
+    await schoolTerm.getAll()
+  }
+}
+
+</script>
+
+<style scoped>
+.centrarDiv {
+  display: grid;
+  place-items: center;
+  height: 80vh;
+}
+</style>

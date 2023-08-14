@@ -10,19 +10,22 @@
 
         <v-form
           @submit="register"
+          ref="form"
           class="mt-5"
           fast-fail
         >
           <v-text-field
-            v-model="dataForm.name"
+            v-model="dataForm.firstName"
             label="Nombres"
+            :rules="nameRules"
             variant="underlined"
             required
           />
 
           <v-text-field
-            v-model="dataForm.lastname"
+            v-model="dataForm.lastName"
             label="Apellidos"
+            :rules="lastNameRules"
             variant="underlined"
             required
           />
@@ -47,8 +50,10 @@
 
           <v-btn
             color="primary"
+            class="mt-3"
             @click="register"
             width="400"
+            :loading="loading"
             >Regitrar</v-btn
           >
 
@@ -56,7 +61,7 @@
             <NuxtLink
               class="text-decoration-none"
               to="/"
-              >Iniciar Sesion</NuxtLink
+              >Registrarse</NuxtLink
             >
           </div>
         </v-form>
@@ -66,14 +71,22 @@
 </template>
 
 <script setup lang="ts">
+import { VForm } from "vuetify/lib/components/index.mjs"
+
+const form = ref<VForm | null>(null)
 const dataForm = reactive({
-  name: "",
-  lastname: "",
-  password: "",
-  email: ""
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: ""
 })
 
+const authStore = useAuthStore()
+const loading = ref(false)
 const showPassword = ref(false)
+
+const nameRules = [(value: any) => !!value || "El nombre es requerido"]
+const lastNameRules = [(value: any) => !!value || "El apellido es requerido"]
 
 const emailRules = [
   (value: any) => !!value || "El correo es requerido",
@@ -86,8 +99,13 @@ const passwordRules = [
     (value && value.length >= 8) ||
     "La contraseña debe tener al menos 8 caracteres"
 ]
-const register = () => {
-  console.log(dataForm)
+const register = async () => {
+  loading.value = true
+  const { valid } = await form.value!.validate()
+  if (!valid) return
+  await authStore.register(dataForm)
+  loading.value = false
+  await navigateTo("/app/dashboard")
 }
 </script>
 

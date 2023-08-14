@@ -14,10 +14,9 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
 
-
-const {isAuthenticated} = storeToRefs(useAuthStore())
+const authStore = useAuthStore()
+const isAuthenticated = computed(()=> authStore.isAutenticated)
 
 </script>
 

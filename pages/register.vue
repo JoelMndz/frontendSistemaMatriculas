@@ -56,7 +56,6 @@
             :loading="loading"
             >Regitrar</v-btn
           >
-
           <div class="mt-3">
             <NuxtLink
               class="text-decoration-none"

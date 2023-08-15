@@ -4,6 +4,7 @@
       <VCard
         elevation="5"
         class="pa-5"
+        width="400"
       >
         <VCardTitle class="text-center">
         {{ schoolTermObjectId ? "Actualizar Periodo" : "Crear Periodo"}}
@@ -28,17 +29,15 @@
             label="Descripcion"
             required
           />
-          <v-card-actions>
+          <v-card-actions class="justify-end">
             <v-btn
               color="blue-darken-1"
               variant="text"
               @click="closeModal"
-              width="200"
             >
               Cerrar
             </v-btn>
             <v-btn
-              width="200"
               color="blue-darken-1"
               variant="text"
               :loading="loading"

@@ -52,7 +52,7 @@ const items = [
   },
   {
     name: 'Curso',
-    route: '/app/estudiante',
+    route: '/app/grade',
     icon: 'mdi-home-city'
   },
   {

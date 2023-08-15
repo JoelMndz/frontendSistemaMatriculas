@@ -41,6 +41,7 @@
               width="200"
               color="blue-darken-1"
               variant="text"
+              :loading="loading"
               @click="schoolTermObjectId ? updateSchoolTerm() : createSchoolTerm()"
             >
               {{ schoolTermObjectId ? "Actualizar" : "Crear"  }}
@@ -56,6 +57,7 @@
 import { ISchoolTerm } from "types";
 import { VCardTitle, VForm } from "vuetify/lib/components/index.mjs"
 const schoolTerm = useSchoolTerm()
+const loading = ref(false);
 
 const props = defineProps({
   schoolTerm: Object as () => ISchoolTerm,
@@ -63,6 +65,7 @@ const props = defineProps({
 })
 
 const schoolTermObjectId = props.schoolTerm?._id
+const closeModalCreate = props.closeModal
 
 const form = ref<VForm | null>(null)
 const dataForm = reactive({
@@ -74,10 +77,12 @@ const nameRules = [(value: any) => !!value || "El periodo es requerido"]
 
 const createSchoolTerm = async () => {
   try {
+    loading.value = true
     const { valid } = await form.value!.validate()
     if (!valid) return
     await schoolTerm.create(dataForm)
-    await navigateTo("/app/dashboard")
+    loading.value = false
+    if(closeModalCreate) props.closeModal()
   } catch (error) {
     console.log(error)
   } finally {
@@ -88,9 +93,11 @@ const createSchoolTerm = async () => {
 const updateSchoolTerm = async () => {
   try {
     if(schoolTermObjectId) {
+      loading.value = true
       await schoolTerm.update(schoolTermObjectId, dataForm)
+      loading.value = true
     }
-    await navigateTo("/app/dashboard")
+    if(closeModalCreate) props.closeModal()
   } catch (error) {
     console.log(error)
   } finally {

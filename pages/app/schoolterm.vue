@@ -22,19 +22,20 @@
         <v-card-title class="headline text-center">{{
           "Confirmar eliminación" 
         }}</v-card-title>
-        <v-card-text>
-          ¿Estás seguro de que deseas eliminar este período?
+        <v-card-text class="text-center">
+          ¿Está seguro de eliminar este período?
         </v-card-text >
         
-        <v-card-actions>
+        <v-card-actions class="justify-end">
           <v-btn
-            color="red darken-1"
+            color="blue darken-1"
             @click="deleteConfirmed"
+            :loading="loading"
           >
             Confirmar
           </v-btn>
           <v-btn
-            color="blue darken-1"
+            color="red darken-1"
             @click="cancelDelete"
           >
             Cancelar
@@ -59,8 +60,8 @@
           v-for="schoolTerm in schoolList"
           :key="schoolTerm._id"
         >
-          <td>{{ schoolTerm.name }}</td>
-          <td>{{ schoolTerm.description }}</td>
+          <td class="text-subtitle-2">{{ schoolTerm.name }}</td>
+          <td class="text-subtitle-2">{{ schoolTerm.description }}</td>
           <td class="text-center">
             <v-icon
               v-if="!schoolTerm.current"
@@ -90,6 +91,7 @@ const openUpdateView = ref(false)
 const schoolObject = ref()
 const showDeleteConfirmation = ref(false)
 const currentSchool = ref()
+const loading = ref(false);
 
 await schoolTermList.getAll()
 
@@ -134,7 +136,9 @@ const cancelDelete = () => {
 
 const deleteSchoolTerm = async (id: string) => {
   try {
+    loading.value = true
     await schoolTermList.delete(id)
+    loading.value = false
   } catch (error) {
     console.log(error)
   } finally {

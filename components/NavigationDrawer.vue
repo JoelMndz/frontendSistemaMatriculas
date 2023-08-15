@@ -14,17 +14,17 @@
     <VDivider />
 
     <VList>
-      <VListItem 
+      <VListItem
         v-for="i in items"
         :key="i.name"
         link
         :to="i.route"
-        :prepend-icon="i.icon" 
-        :title="i.name" 
+        :prepend-icon="i.icon"
+        :title="i.name"
         :value="i.name"
-        @click="$router.push(i.route)"/>
+        @click="$router.push(i.route)"
+      />
     </VList>
-
   </VNavigationDrawer>
 </template>
 
@@ -32,32 +32,35 @@
 const items = [
   {
     name: 'Dashboard',
-    route:'/app/dashboard',
-    icon:'mdi-home-city'
+    route: '/app/dashboard',
+    icon: 'mdi-home-city'
   },
   {
     name: 'Estudiantes',
-    route:'/app/estudiante',
-    icon:'mdi-home-city'
+    route: '/app/estudiante',
+    icon: 'mdi-home-city'
   },
   {
     name: 'Profesores',
-    route:'/app/estudiante',
-    icon:'mdi-home-city'
+    route: '/app/estudiante',
+    icon: 'mdi-home-city'
   },
   {
     name: 'Matrícula',
-    route:'/app/estudiante',
-    icon:'mdi-home-city'
+    route: '/app/estudiante',
+    icon: 'mdi-home-city'
   },
   {
     name: 'Curso',
-    route:'/app/estudiante',
-    icon:'mdi-home-city'
+    route: '/app/estudiante',
+    icon: 'mdi-home-city'
+  },
+  {
+    name: 'School Term',
+    route: '/app/schoolterm',
+    icon: 'mdi-school'
   }
 ]
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -1,15 +1,46 @@
 import { defineStore } from "pinia"
+import { useErrorStore } from "./error"
 
 interface IState{
   user: IUser | null,
   isAutenticated: Boolean
 }
+interface ILoginResponse {
+  user: IUser
+  token: string
+}
+
+interface IRegisterResponse {
+  user: IUser
+  token: string
+}
+
+interface Register {
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+}
+
 export const useAuthStore = defineStore('auth',{
   state: ():IState=>({
     user: null,
     isAutenticated: false
   }),
   actions:{
+    async register(values: Register) {
+      const { data, error } = await useFetchApi("/api/auth/register-admin", {
+        method: "post",
+        body: values,
+      })
+      const response = data.value as IRegisterResponse
+      if (!error.value) {
+        const token = useCookie('token');
+        token.value = response.token      
+        this.user = response.user;
+      }
+    },
+
     async login(email:string, password: string){
       interface ILoginResponse {user:IUser, token:string}
       const {setError} = useErrorStore();
@@ -27,6 +58,7 @@ export const useAuthStore = defineStore('auth',{
       this.isAutenticated = true; 
       this.user = response.user;
     },
+    
     logout(){
       const token = useCookie('token')
       token.value = null;

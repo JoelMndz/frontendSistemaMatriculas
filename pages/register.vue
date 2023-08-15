@@ -4,10 +4,9 @@
       <VCard
         elevation="5"
         class="pa-5"
-        width="400"
-      >
+        width="400">
         <h3 class="text-center">Registrate Ahora</h3>
-
+        <Error class="mt-1" />
         <v-form
           @submit="register"
           ref="form"
@@ -60,7 +59,7 @@
             <NuxtLink
               class="text-decoration-none"
               to="/"
-              >Registrarse</NuxtLink
+              >Regresar</NuxtLink
             >
           </div>
         </v-form>
@@ -83,6 +82,7 @@ const dataForm = reactive({
 const authStore = useAuthStore()
 const loading = ref(false)
 const showPassword = ref(false)
+const { resetError } = useErrorStore();
 
 const nameRules = [(value: any) => !!value || "El nombre es requerido"]
 const lastNameRules = [(value: any) => !!value || "El apellido es requerido"]
@@ -100,12 +100,17 @@ const passwordRules = [
 ]
 const register = async () => {
   loading.value = true
+  resetError()
   const { valid } = await form.value!.validate()
   if (!valid) return
   await authStore.register(dataForm)
   loading.value = false
-  await navigateTo("/app/dashboard")
+  //await navigateTo("/app/dashboard")
 }
+
+onUnmounted(() => {
+  resetError()
+})
 </script>
 
 <style scoped>

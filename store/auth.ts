@@ -29,16 +29,19 @@ export const useAuthStore = defineStore('auth',{
   }),
   actions:{
     async register(values: Register) {
+      const { setError } = useErrorStore();
       const { data, error } = await useFetchApi("/api/auth/register-admin", {
         method: "post",
         body: values,
       })
-      const response = data.value as IRegisterResponse
-      if (!error.value) {
-        const token = useCookie('token');
-        token.value = response.token      
-        this.user = response.user;
+      const response = data.value as IRegisterResponse;
+      if (error.value) {
+        setError({message: 'Solo es posible registrar un usuario'});
+        return;
       }
+      const token = useCookie('token');
+      token.value = response.token; 
+      this.user = response.user;
     },
 
     async login(email:string, password: string){

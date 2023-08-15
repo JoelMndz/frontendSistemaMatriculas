@@ -35,7 +35,7 @@ export const useSchoolTerm = defineStore("school", {
       })
 
       if (!error.value) {
-        this.schools = data.value as ISchoolTerm[]
+        this.schools = data.value as ISchoolTerm[];
         
       }
     },
@@ -45,9 +45,9 @@ export const useSchoolTerm = defineStore("school", {
         method: "POST",
         body: values
       })
-      const response = data.value as ICreateResponse
+      const response = data.value as ICreateResponse;
       if (!error.value) {
-        this.schoolCurrent = response.schoolCurrent
+        this.schoolCurrent = response.schoolCurrent;
       }
     },
 
@@ -56,10 +56,9 @@ export const useSchoolTerm = defineStore("school", {
         method: "PATCH",
         body: values
       })
-      console.log(useCookie("token"))
-      const response = data.value as IUpdateResponse
+      const response = data.value as IUpdateResponse;
       if (!error.value) {
-        this.schoolCurrent = response.schoolCurrent
+        this.schoolCurrent = response.schoolCurrent;
       }
     },
 
@@ -68,11 +67,11 @@ export const useSchoolTerm = defineStore("school", {
         method: "DELETE"
       })
 
-      this.schools = this.schools.filter((school) => school._id !== id)
+      this.schools = this.schools.filter((school) => school._id !== id);
     },
 
     setSchoolTermCurrent(school: ISchoolTerm) {
-      this.schoolCurrent = school
+      this.schoolCurrent = school;
     }
   }
 })

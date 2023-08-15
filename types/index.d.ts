@@ -18,4 +18,11 @@ declare global {
     title?:string,
     message: string,
   }
+
+  interface IGrade {
+    _id: string,
+    name: string,
+    description: string,
+    subjects: string[]
+  }
 }

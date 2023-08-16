@@ -108,8 +108,9 @@ const updateSchoolTerm = async () => {
 
 <style scoped>
 .centrarDiv {
-  display: grid;
-  place-items: center;
-  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 </style>

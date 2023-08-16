@@ -28,6 +28,7 @@
           <v-chip 
             class="mr-1 mb-1" 
             closable
+            @click:close="removeSubject(index)"
             v-for="(subject, index) in dataForm.subjects" 
             :key="index">
               {{ subject }}
@@ -43,7 +44,7 @@
             variant="underlined" />
 
           <v-card-actions class="justify-end">
-            <v-btn color="blue-darken-1" @click="closeModal" >
+            <v-btn color="red-darken-1" @click="closeModal" >
               Cerrar
             </v-btn>
             <v-btn 
@@ -126,10 +127,18 @@ const updateGrade = async () => {
 
 const addSubject = () => {
   if (newSubject.value.trim()) {
-    dataForm.subjects.push(newSubject.value);
+    if(!dataForm.subjects.includes(newSubject.value)){
+      dataForm.subjects.push(newSubject.value);
+    }
     newSubject.value = '';
   }
 };
+
+const removeSubject = (index: number) => {
+  if (index >= 0 && index < dataForm.subjects.length) {
+    dataForm.subjects.splice(index, 1);
+  }
+}
 
 </script>
 

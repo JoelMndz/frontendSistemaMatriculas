@@ -25,4 +25,12 @@ declare global {
     description: string,
     subjects: string[]
   }
+
+  interface IRepresentative{
+    _id: string,
+    fullName: string,
+    cedula: string,
+    email: string,
+    imageCedulaUrl: string
+  }
 }

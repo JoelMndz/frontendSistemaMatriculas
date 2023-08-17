@@ -31,6 +31,8 @@ declare global {
     fullName: string,
     cedula: string,
     email: string,
-    imageCedulaUrl: string
+    imageCedulaUrl: string,
+    birthDate: number,
+    address: string,
   }
 }

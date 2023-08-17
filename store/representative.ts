@@ -7,7 +7,9 @@ interface ICreateRepresentative{
   cedulaFile:{
     base64:string,
     fileName: string
-  }
+  },
+  birthDate: number,
+  address: string,
 }
 
 interface IUpdateRepresentative{
@@ -18,7 +20,9 @@ interface IUpdateRepresentative{
   cedulaFile?:{
     base64:string,
     fileName: string
-  }
+  },
+  birthDate: number,
+  address: string,
 }
 
 interface IState{

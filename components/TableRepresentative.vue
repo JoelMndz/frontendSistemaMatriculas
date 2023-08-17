@@ -12,8 +12,10 @@
         <tbody>
           <tr v-for="item in representatives" :key="item._id">
             <td>{{ item.fullName }}</td>
-            <td>{{ item.email }}</td>
             <td>{{ item.cedula }}</td>
+            <td>{{ item.email }}</td>
+            <td>{{ formatDate(item.birthDate) }}</td>
+            <td>{{ item.address }}</td>
             <td>
               <a :href="item.imageCedulaUrl" target="_blank">Ver</a>
             </td>
@@ -69,13 +71,17 @@
 </template>
 
 <script setup lang="ts">
+import moment from 'moment';
+
 const representativeDelete = ref<IRepresentative | null>(null)
 const showConfirmDelete = ref(false)
 const loading = ref(false)
 const headers = [
   'Nombre completo',
-  'Email',
   'Cédula',
+  'Email',
+  'Fecha de nacimiento',
+  'Dirección',
   'Foto Cédula',
   'Acciones'
 ]
@@ -84,6 +90,9 @@ const representativeStore = useRepresentativeStore()
 const {setCurrentRepresentative,setShowForm} = representativeStore
 const representatives = computed(()=> representativeStore.representatives)
 
+const formatDate = (date:number) =>{
+  return moment(date).format('DD/MM/YYYY')
+}
 const handleButtonEdit = (representative:IRepresentative)=>{
   setCurrentRepresentative(representative)
   setShowForm(true)

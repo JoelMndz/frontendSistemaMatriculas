@@ -24,10 +24,24 @@
           v-model.trim="formData.cedula"
         />
         <VTextField 
+          type="email"
           variant="underlined"
           label="Email"
           :rules="rules.ruleEmail"
           v-model="formData.email"
+        />
+        <VTextField 
+          type="date"
+          variant="underlined"
+          label="Fecha de nacimiento"
+          :rules="rules.ruleBirthDate"
+          v-model="formData.birthDate"
+        />
+        <VTextField 
+          variant="underlined"
+          label="Dirección"
+          :rules="rules.ruleAddress"
+          v-model="formData.address"
         />
         <VFileInput
           v-model="cedulaFile"
@@ -62,6 +76,7 @@
 
 <script setup lang="ts">
 import { VForm } from 'vuetify/lib/components/index.mjs';
+import moment from "moment";
 
 interface IFormData{
   fullName:string,
@@ -70,7 +85,9 @@ interface IFormData{
   cedulaFile?:{
     base64:string,
     fileName: string
-  }
+  },
+  birthDate: string,
+  address: string,
 }
 
 const props = defineProps({
@@ -85,6 +102,8 @@ const formData = reactive<IFormData>({
   fullName: props.representative?.fullName ?? '',
   cedula: props.representative?.cedula ?? '',
   email: props.representative?.email ?? '',
+  birthDate: props.representative?.birthDate ? moment(props.representative?.birthDate).format('YYYY-MM-DD'): '',
+  address: props.representative?.address ?? '',
   cedulaFile: undefined
 })
 const cedulaFile = ref<File[]>([])
@@ -115,7 +134,19 @@ const rules = {
     (value:File[]) => {
       return !!value || (value[0] as File).size < 10000000 || 'La foto no puede pesar más de 10 MB!'
     },
-    
+  ],
+  ruleAddress:[
+    (value:string) => {
+      return !!value || 'La dirección es obligatoria'
+    },
+  ],
+  ruleBirthDate:[
+    (value:string) => {
+      return !!value || 'La fecha es obligatoria'
+    },
+    (value:string) => {
+      return moment().diff(moment(value),'years') >= 18 || 'El representante debe ser mayor de edad'
+    },
   ]
 }
 const representativeStore = useRepresentativeStore()
@@ -137,9 +168,17 @@ const handleSubmit = async()=>{
   const {valid} = await refForm.value!.validate()
   if(valid){
     if(!props.representative)
-      await createRepresentative({...formData,cedulaFile:formData.cedulaFile!})
+      await createRepresentative({
+        ...formData,
+        cedulaFile:formData.cedulaFile!,
+        birthDate: moment(formData.birthDate).utc().valueOf()
+      })
     else
-      await updateRepresentative({...formData,id:props.representative._id})
+      await updateRepresentative({
+        ...formData,
+        id:props.representative._id,
+        birthDate: moment(formData.birthDate).utc().valueOf()
+      })
     if(!error.value) setShowForm(false);
   }
   loading.value = false;

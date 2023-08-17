@@ -21,7 +21,7 @@
           variant="underlined"
           label="Cédula"
           :rules="rules.ruleCedula"
-          v-model="formData.cedula"
+          v-model.trim="formData.cedula"
         />
         <VTextField 
           variant="underlined"
@@ -96,9 +96,12 @@ const rules = {
     }
   ],
   ruleCedula:[
-  (value:string) => {
+    (value:string) => {
       return !!value || 'La cédula es obligatorio!'
-    }
+    },
+    (value:string) => {
+      return value.length >= 6 || 'Debe tener al menos 6 dígitos'
+    },
   ],
   ruleEmail:[
     (value:string) =>{

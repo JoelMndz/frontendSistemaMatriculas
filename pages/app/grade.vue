@@ -16,17 +16,16 @@
         
         <v-card-actions class="justify-end">
           <v-btn
-            color="blue darken-1"
-            :loading="loading"
-            @click="deleteConfirmed"
-          >
-            Confirmar
+            color="red darken-1"
+            :disabled="loading"
+            @click="showDeleteConfirmation = false">
+            Cancelar
           </v-btn>
           <v-btn
-            color="red darken-1"
-            @click="showDeleteConfirmation = false"
-          >
-            Cancelar
+            color="blue darken-1"
+            :loading="loading"
+            @click="deleteConfirmed">
+            Confirmar
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -69,13 +68,13 @@
         sm="6"
         :key="grade._id"
       >
-        <v-card class="flex-column">
+        <v-card>
           <v-row>
-            <v-col>
+            <v-col sm="9" md="9" cols="9">
               <v-card-title>{{ grade?.name }}</v-card-title>
               <v-card-subtitle>{{ grade.description }}</v-card-subtitle>
             </v-col>
-            <v-col>
+            <v-col sm="3" md="3" cols="3">
               <div class="text-end">
                 <v-menu>
                   <template v-slot:activator="{ props: menu }">

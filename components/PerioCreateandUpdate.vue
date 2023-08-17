@@ -33,6 +33,7 @@
             <v-btn
               color="blue-darken-1"
               variant="text"
+              :disabled="loading"
               @click="closeModal"
             >
               Cerrar

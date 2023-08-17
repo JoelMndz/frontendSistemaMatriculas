@@ -44,7 +44,7 @@
             variant="underlined" />
 
           <v-card-actions class="justify-end">
-            <v-btn color="red-darken-1" @click="closeModal" >
+            <v-btn color="red-darken-1" :disabled="loading" @click="closeModal" >
               Cerrar
             </v-btn>
             <v-btn 

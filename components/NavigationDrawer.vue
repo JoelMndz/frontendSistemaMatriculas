@@ -41,6 +41,11 @@ const items = [
     icon: 'mdi-home-city'
   },
   {
+    name: 'Acudientes',
+    route: '/app/representative',
+    icon: 'mdi-account-group'
+  },
+  {
     name: 'Profesores',
     route: '/app/estudiante',
     icon: 'mdi-home-city'
@@ -56,7 +61,7 @@ const items = [
     icon: 'mdi-home-city'
   },
   {
-    name: 'School Term',
+    name: 'Periodo Lectivo',
     route: '/app/schoolterm',
     icon: 'mdi-school'
   }

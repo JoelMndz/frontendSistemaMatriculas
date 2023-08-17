@@ -45,6 +45,7 @@
               variant="text"
               color="blue-darken-1"
               @click="handleCancel"
+              :disabled="loading"
             >Cancelar</VBtn>
             <VBtn 
               variant="text"

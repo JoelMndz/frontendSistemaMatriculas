@@ -30,6 +30,7 @@
           <v-btn
             color="blue darken-1"
             @click="deleteConfirmed"
+            :disabled="loading"
             :loading="loading"
           >
             Confirmar

@@ -62,6 +62,13 @@ export const useGrade = defineStore('grade', {
       }
     },
 
+    async delete (id: string) {
+      await useFetchApi(`/api/grade/${id}`, {
+        method: 'DELETE'
+      })
+      this.grades = this.grades.filter( grade => grade._id !== id)
+    },
+
     setCurretGrade (grade: IGrade) {
       this.gradeCurrent = grade;
     }

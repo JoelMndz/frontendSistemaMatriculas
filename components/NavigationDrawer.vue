@@ -47,8 +47,8 @@ const items = [
   },
   {
     name: 'Profesores',
-    route: '/app/estudiante',
-    icon: 'mdi-home-city'
+    route: '/app/professor',
+    icon: 'mdi-human-male-board-poll'
   },
   {
     name: 'Matrícula',

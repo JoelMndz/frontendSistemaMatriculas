@@ -35,4 +35,15 @@ declare global {
     birthDate: number,
     address: string,
   }
+
+  interface IProfessor {
+    _id: string,
+    fullName: string,
+    cedula: string,
+    dateBirth: number,
+    email: string,
+    address: string,
+    disability: string,
+    cv: string, 
+  }
 }

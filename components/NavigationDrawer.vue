@@ -37,7 +37,7 @@ const items = [
   },
   {
     name: 'Estudiantes',
-    route: '/app/estudiante',
+    route: '/app/student',
     icon: 'mdi-home-city'
   },
   {

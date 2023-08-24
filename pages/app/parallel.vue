@@ -12,6 +12,7 @@ const modal = computed(() => parallelStore.showForm )
 const currentParallel = computed(() =>  parallelStore.parallelCurrent)
 const currentGrade = computed(() => gradeStore.gradeCurrent )
 
+
 const buttonAdd = () => {
   parallelStore.openModalParallel(true) 
 }

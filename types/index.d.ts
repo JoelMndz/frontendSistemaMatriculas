@@ -23,7 +23,9 @@ declare global {
     _id: string,
     name: string,
     description: string,
-    subjects: string[]
+    subjects: string[],
+    parallels: IParallel[]
+    professors: IProfessor[]
   }
 
   interface IRepresentative{
@@ -61,5 +63,14 @@ declare global {
     bulletinImageUrl: string,
     _representative1: IRepresentative,
     _representative2: IRepresentative | null,
+  }
+  
+  interface IParallel {
+    _id: string,
+    name: string,
+    quotas: number,
+    _grade: string,
+    _professor: string
+    professors: IProfessor[]; 
   }
 }

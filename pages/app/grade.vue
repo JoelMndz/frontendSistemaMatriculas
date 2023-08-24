@@ -1,4 +1,4 @@
-<template>
+<template>  
   <v-container>
     <v-btn class="mb-3" @click="openModalCreate">Crear Grado</v-btn>
 
@@ -71,7 +71,7 @@
         <v-card>
           <v-row>
             <v-col sm="9" md="9" cols="9">
-              <v-card-title>{{ grade?.name }}</v-card-title>
+              <v-card-title>{{ grade?.name}}</v-card-title>
               <v-card-subtitle>{{ grade.description }}</v-card-subtitle>
             </v-col>
             <v-col sm="3" md="3" cols="3">
@@ -98,6 +98,15 @@
                 </v-menu>
               </div>
             </v-col>
+            <v-col class="d-flex justify-end">
+              <div
+                v-for="parallel in grade.parallels"
+                class="bg-primary rounded-circle d-inline-block mr-2">
+                  <v-card-title> 
+                    {{ parallel.name }}
+                  </v-card-title>
+              </div>
+            </v-col>
           </v-row>
           <v-card-actions>
             <v-btn
@@ -106,6 +115,13 @@
               @click="showSubjectInfo(grade)"
             >
               Materias
+            </v-btn>
+            <v-btn
+              color="orange-lighten-2"
+              variant="text" 
+              @click="redirectParallel(grade)"
+              class="text-decoration-none">
+                Paralelos
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -122,18 +138,24 @@ const openGrade = ref(false);
 const gradeObject = ref();
 const gradeStore = useGrade();
 const loading = ref(false);
-const showDeleteConfirmation = ref(false)
+const showDeleteConfirmation = ref(false);
 const selectedGrade = ref();
+const router = useRouter()
 
 await gradeStore.getAll();
 
-const gradeList = computed(() => {
-  return gradeStore.grades;
-});
+const gradeList = computed(() => 
+  gradeStore.grades
+);
 
 const openModalCreate = () => {
   openCreateView.value = true;
 };
+
+const redirectParallel = (grade: IGrade) => {
+  gradeStore.setCurretGrade(grade)
+  router.push('/app/parallel')
+}
 
 const closeModal = () => {
   openCreateView.value = false;
@@ -153,8 +175,6 @@ const deteleGrade = async (id: string) => {
     loading.value = false;
   } catch (error) {
     console.log(error);
-  } finally {
-    await gradeStore.getAll();
   }
 };
 

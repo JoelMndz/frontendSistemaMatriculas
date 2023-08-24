@@ -145,7 +145,7 @@ const rules = {
       return !!value || 'La fecha es obligatoria'
     },
     (value:string) => {
-      return moment().diff(moment(value),'years') >= 18 || 'El representante debe ser mayor de edad'
+      return moment().diff(moment(value),'years') >= 18 || 'El acudiente debe ser mayor de edad'
     },
   ]
 }
@@ -165,6 +165,7 @@ const handleCancel = ()=>{
 
 const handleSubmit = async()=>{
   loading.value = true
+  errorStore.resetError()
   const {valid} = await refForm.value!.validate()
   if(valid){
     if(!props.representative)

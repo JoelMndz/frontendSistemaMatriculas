@@ -53,7 +53,7 @@ declare global {
     _id: string,
     fullName: string,
     cedula: string,
-    dateBirth: number,
+    birthDate: number,
     fatherName: string,
     motherName: string,
     address: string,

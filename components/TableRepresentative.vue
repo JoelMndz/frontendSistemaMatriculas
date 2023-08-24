@@ -45,7 +45,7 @@
   >
     <VCard>
       <VCardTitle>
-        <p class="text-h4">Eliminar representante</p>
+        <p class="text-h4">Eliminar acudiente</p>
       </VCardTitle>
       <VCardText>
         ¿Estás seguro de eliminar a {{ representativeDelete?.fullName }}?

@@ -30,6 +30,7 @@ export const useGrade = defineStore('grade', {
   actions: {
 
     async getAll () {
+      const { parallelCurrent } = useParallelStore()
       const { data, error } = await useFetchApi('/api/grade', {
         method: 'GET'
       })
@@ -51,6 +52,7 @@ export const useGrade = defineStore('grade', {
     }, 
 
     async update (id: string, values: UpdateGrade) {
+
       const { data, error } = await useFetchApi(`/api/grade/${id}`, {
         method: 'PATCH',
         body: values
@@ -69,7 +71,7 @@ export const useGrade = defineStore('grade', {
       this.grades = this.grades.filter( grade => grade._id !== id)
     },
 
-    setCurretGrade (grade: IGrade) {
+    setCurretGrade (grade: IGrade | null) {
       this.gradeCurrent = grade;
     }
   }

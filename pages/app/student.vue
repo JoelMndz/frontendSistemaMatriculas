@@ -32,9 +32,10 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
+
 const studentStore = useStudentStore()
-const showForm = computed(()=> studentStore.showForm)
-const currentStudent = computed(()=> studentStore.currentStudent)
+const {showForm, currentStudent} = storeToRefs(studentStore)
 
 const handleButtonAdd = ()=>{
   studentStore.setCurrentStudent(null)

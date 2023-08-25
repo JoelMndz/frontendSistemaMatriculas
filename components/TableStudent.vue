@@ -10,34 +10,50 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in representatives" :key="item._id">
-            <td>{{ item.fullName }}</td>
-            <td>{{ item.cedula }}</td>
-            <td>{{ item.email }}</td>
-            <td>{{ formatDate(item.birthDate) }}</td>
-            <td>{{ item.address }}</td>
+          <tr 
+            v-for="i in students"
+            :key="i._id">
+            <td>{{ i.fullName }}</td>
+            <td>{{ i.cedula }}</td>
+            <td>{{ formatDate(i.birthDate) }}</td>
+            <td>{{ i.fatherName }}</td>
+            <td>{{ i.motherName }}</td>
+            <td>{{ i.address }}</td>
             <td>
-              <a :href="item.imageCedulaUrl" target="_blank">Ver</a>
+              <VChipGroup>
+                <VChip>
+                  {{ i._representative1.fullName }}
+                </VChip>
+                <VChip v-if="!!i._representative2">
+                  {{ i._representative2?.fullName }}
+                </VChip>
+              </VChipGroup>
+            </td>
+            <td>{{ !!i.disability ? i.disability : 'N/A' }}</td>
+            <td>{{ !!i.allergies ? i.allergies : 'N/A' }}</td>
+            <td>
+              <a class="me-2" :href="i.cedulaImageUrl" target="_blank">Cédula</a>
+              <a :href="i.bulletinImageUrl" target="_blank">Boletín</a>
             </td>
             <td>
               <VBtn 
                 variant="text"
                 color="error"
                 icon="mdi-delete"
-                @click="handleConfirm(item)"
+                @click="handleConfirm(i)"
               />
               <VBtn 
                 variant="text"
                 color="warning"
                 icon="mdi-pencil"
-                @click="handleButtonEdit(item)"
+                @click="handleButtonEdit(i)"
               />
             </td>
           </tr>
         </tbody>
       </VTable>
     </VCardText>
-  </VCard>
+  </VCard >
   <VDialog
     v-model="showConfirmDelete"
     persistent
@@ -45,10 +61,10 @@
   >
     <VCard>
       <VCardTitle>
-        <p class="text-h4">Eliminar acudiente</p>
+        <p class="text-h4">Eliminar estudiante</p>
       </VCardTitle>
       <VCardText>
-        ¿Estás seguro de eliminar a {{ representativeDelete?.fullName }}?
+        ¿Estás seguro de eliminar a {{ studentDelete?.fullName }}?
       </VCardText>
       <VCardActions>
         <VSpacer/>
@@ -73,49 +89,52 @@
 <script setup lang="ts">
 import moment from 'moment';
 
-const representativeDelete = ref<IRepresentative | null>(null)
+const studentStore = useStudentStore()
+const students = computed(()=> studentStore.students)
 const showConfirmDelete = ref(false)
 const loading = ref(false)
+const studentDelete = ref<IStudent| null>(null)
 const headers = [
   'Nombre completo',
   'Cédula',
-  'Email',
   'Fecha de nacimiento',
+  'Padre',
+  'Madre',
   'Dirección',
-  'Foto Cédula',
+  'Representantes',
+  'Discapacidad',
+  'Alergias',
+  'Recursos',
   'Acciones'
 ]
-
-const representativeStore = useRepresentativeStore()
-const {setCurrentRepresentative,setShowForm} = representativeStore
-const representatives = computed(()=> representativeStore.representatives)
 
 const formatDate = (date:number) =>{
   return moment(date).format('DD/MM/YYYY')
 }
-const handleButtonEdit = (representative:IRepresentative)=>{
-  setCurrentRepresentative(representative)
-  setShowForm(true)
-}
 
-const handleConfirm = (representative:IRepresentative)=>{
-  representativeDelete.value = representative
+const handleConfirm = (student:IStudent)=>{
+  studentDelete.value = student
   showConfirmDelete.value = true
 }
 
 const handleCancel = ()=>{
   showConfirmDelete.value = false
-  representativeDelete.value = null
+  studentDelete.value = null
 }
 
 const handleDelete = async()=>{
   loading.value = true
-  await representativeStore.delete(representativeDelete.value!._id)
+  await studentStore.delete(studentDelete.value!._id)
   loading.value = false
   showConfirmDelete.value = false
 }
 
-await representativeStore.getAll()
+const handleButtonEdit = (student:IStudent)=>{
+  studentStore.setCurrentStudent(student)
+  studentStore.setShowForm(true)
+}
+
+await studentStore.getAll()
 
 </script>
 

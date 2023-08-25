@@ -49,6 +49,22 @@ declare global {
     cv: string, 
   }
 
+  interface IStudent{
+    _id: string,
+    fullName: string,
+    cedula: string,
+    birthDate: number,
+    fatherName: string,
+    motherName: string,
+    address: string,
+    disability?: string,
+    allergies?: string,
+    cedulaImageUrl: string,
+    bulletinImageUrl: string,
+    _representative1: IRepresentative,
+    _representative2: IRepresentative | null,
+  }
+  
   interface IParallel {
     _id: string,
     name: string,

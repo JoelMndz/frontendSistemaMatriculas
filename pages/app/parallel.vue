@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { create } from 'domain';
+import { storeToRefs } from 'pinia';
 import { mergeProps } from 'vue';
 const parallelStore = useParallelStore()
+const schoolTerm = useSchoolTerm()
 const gradeStore = useGrade();
 const showModalDelete = ref(false);
 const loading = ref(false);
@@ -10,11 +11,20 @@ const router = useRouter()
 const parallelDelete = ref<IParallel | null>(null);
 const modal = computed(() => parallelStore.showForm )
 const currentParallel = computed(() =>  parallelStore.parallelCurrent)
-const currentGrade = computed(() => gradeStore.gradeCurrent )
+const { gradeCurrent: currentGrade } = storeToRefs(gradeStore);
+const { current: currentSchoolTerm } = storeToRefs(schoolTerm)
 
+const parallelData = computed(() => {
+  const currentGradeNew = {...currentGrade.value}
+    currentGradeNew.parallels = currentGradeNew.parallels?.filter(item => 
+      item.schoolterm && item.schoolterm.length > 0 && item.schoolterm[0].name === currentSchoolTerm.value
+    )
+  return currentGradeNew
+})
 
 const buttonAdd = () => {
-  parallelStore.openModalParallel(true) 
+  parallelStore.currentParallel(null);
+  parallelStore.openModalParallel(true);
 }
 
 const openModalUpdate = (parallel: IParallel) => {
@@ -61,25 +71,24 @@ onMounted(() => {
         <VBtn @click="buttonAdd">Crear Paralelo</VBtn>
       </VCol>
     </VRow>
-        <VRow class="mt-2">
+        <VRow class="mt-2" v-if="parallelData">
           <VCol
             md="6"
             xl="4"
             cols="12"
             lg="4"
             sm="6"
-            v-for="paralell in currentGrade?.parallels"
-            :key="paralell._id"
-            >
+            v-for="paralell in parallelData.parallels"
+            :key="paralell._id">
             <v-card>
                 <VRow>
                   <VCol sm="9" md="9" cols="9">
                     <v-card-title>Paralelo: {{ paralell?.name }}</v-card-title>
-                    <v-card-subtitle class="text-subtitle-2 mb-3">Cupos: {{ paralell.quotas }}</v-card-subtitle>
+                    <v-card-subtitle class="text-subtitle-2 mb-3">Cupos: {{ paralell?.quotas }}</v-card-subtitle>
                     <v-card-subtitle
                       class="mb-2"
-                      v-for="pro in paralell.professors"> 
-                      {{ pro.fullName }}
+                      v-for="pro in paralell?.professors"> 
+                      {{ pro?.fullName }}
                     </v-card-subtitle>
                   </VCol>
                   <VCol sm="3" md="3" cols="3">

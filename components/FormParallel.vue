@@ -1,67 +1,74 @@
 <template>
-  <VCard>
-    <VCardTitle class="text-center text-subtitle-1">
-      <h3>Formulario</h3>
-    </VCardTitle>
-    <VCardText>
-      <Error />
-      <VForm
-        ref="form" 
-        @submit.prevent="handleSubmit">
-
-        <VTextField 
-          variant="underlined"
-          label="Cupos"
-          :rules="rules.quotas"
-          v-model="formData.quotas"/>
+  <div class="centerDiv">
+    <VCard
+      elevation="5"
+      width="400"
+      class="pa-5">
+      <v-card-title class="text-center text-subtitle-h4">
+        {{ title }}
+      </v-card-title>
+        <Error />
+        <VForm
+          ref="form" 
+          fast-fail
+          @submit.prevent="handleSubmit">
           
-        <VSelect
-          v-model="formData.name"
-          :items="alphabetOptions"
-          item-text="name"
-          item-value="name"
-          label="Seleccione un paralelo"
-          single-line
-          :rules="rules.parallel"
-          persistent-hint/>
+          <v-text-field
+            variant="underlined"
+            label="Cupos"
+            :rules="rules.quotas"
+            v-model="formData.quotas"/>
+            
+          <v-select
+            v-model="formData.name"
+            :items="alphabetOptions"
+            item-text="name"
+            item-value="name"
+            single-line
+            :rules="rules.parallel"
+            hint="Seleccione un paralelo"
+            variant="underlined"
+            persistent-hint />
 
-        <VSelect
-          v-model="formData._professor"
-          :items="getProfessorOptions"
-          item-value="_id"
-          :rules="rules.professor"
-          item-title="name"
-          label="Seleccione un profesor"
-          single-line
-          persistent-hint/>
+          <v-select
+            class="mt-1"
+            v-model="formData._professor"
+            :items="getProfessorOptions"
+            item-value="_id"
+            :rules="rules.professor"
+            variant="underlined"
+            item-title="name"
+            hint="Seleccione un profesor"
+            single-line
+            persistent-hint/>
 
-        <VRow>
-          <VSpacer/>
-          <VCol cols="auto">
-            <VBtn 
-              variant="text" 
-              color="blue-darken-1" 
-              @click="closeModal"
-              :disabled="loading">
-                Cancelar
-            </VBtn>
+          <VRow>
+            <VSpacer/>
+            <VCol cols="auto">
+              <VBtn 
+                variant="text" 
+                color="blue-darken-1" 
+                @click="closeModal"
+                :disabled="loading">
+                  Cancelar
+              </VBtn>
 
-            <VBtn
-              variant="text" 
-              color="blue-darken-1"
-              type="submit"
-              :loading="loading">
-                Guardar
-            </VBtn>
-          </VCol>
-        </VRow>
-      </VForm>
-    </VCardText>
-  </VCard>
+              <VBtn
+                variant="text" 
+                color="blue-darken-1"
+                type="submit"
+                :loading="loading">
+                  Guardar
+              </VBtn>
+            </VCol>
+          </VRow>
+        </VForm>
+    </VCard>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { Value } from 'sass';
+import { storeToRefs } from 'pinia';
 import { VForm } from 'vuetify/lib/components/index.mjs';
 const errorStore = useErrorStore();
 const parallelStore = useParallelStore()
@@ -71,8 +78,8 @@ const loading = ref(false)
 
 await professorStore.getAll()
 const allProfessors = professorStore.professors
-const currentGrade = computed(() => gradeStore.gradeCurrent )
 const error = computed(() => errorStore.error)
+const { gradeCurrent: currentGrade } = storeToRefs(gradeStore)
 
 interface IFormData{
   name: string,
@@ -83,11 +90,13 @@ const props = defineProps({
   parallelModel: Object as () => IParallel | null
 })
 
+const title = computed(() => props.parallelModel ? 'Actualizar Paralelo':'Agregar Paralelo')
+
 const form = ref<VForm | null>(null)
 const formData = reactive<IFormData>({
   name: props.parallelModel?.name ?? '',
   quotas: props.parallelModel?.quotas?.toString() ?? '25',
-  _professor: props.parallelModel?._professor ?? '',
+  _professor: props.parallelModel?._professor as string ?? '',
 })
 
 const closeModal = () => { 
@@ -106,6 +115,7 @@ const alphabetOptions = ref(Array.from({ length: 26 }, (_, index) => String.from
 
 const handleSubmit = async () => {
   loading.value = true;
+  errorStore.resetError();
   const { valid } = await form.value!.validate();
   if(valid){
     if(!props.parallelModel){
@@ -124,7 +134,7 @@ const handleSubmit = async () => {
           _grade: currentGrade.value?._id,
           quotas: parseInt(formData.quotas),
           _professor: formData._professor
-        })  
+        }) 
       }
     }
     if(!error.value) closeModal();
@@ -141,3 +151,12 @@ const rules = {
 
 }
 </script>
+
+<style>
+.centerDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+</style>

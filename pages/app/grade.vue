@@ -1,19 +1,29 @@
-<template>  
+<template>
   <v-container>
-    <v-btn class="mb-3" @click="openModalCreate">Crear Grado</v-btn>
+    <v-btn
+      class="mb-3"
+      @click="openModalCreate">
+        Crear Grado
+      </v-btn>
+
+    <v-select
+      v-model="selectedYear"
+      :items="schoolList"
+      item-value="name"
+      item-title="name"
+      label="Año electivo"/>
 
     <v-dialog v-model="showDeleteConfirmation">
       <v-card
         width="300"
-        class="mx-auto"
-      >
+        class="mx-auto">
         <v-card-title class="headline text-center">{{
-          "Confirmar eliminación" 
+          'Confirmar eliminación'
         }}</v-card-title>
         <v-card-text class="text-center">
           ¿Está seguro de eliminar este curso?
-        </v-card-text >
-        
+        </v-card-text>
+
         <v-card-actions class="justify-end">
           <v-btn
             color="red darken-1"
@@ -31,15 +41,23 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="openCreateView" transition="dialog-top-transition">
+    <v-dialog
+      v-model="openCreateView"
+      transition="dialog-top-transition">
       <FormGrade :closeModal="closeModal" />
     </v-dialog>
 
-    <v-dialog v-model="openUpdateView" transition="dialog-top-transition">
-      <FormGrade :grade="gradeObject" :closeModal="closeModal" />
+    <v-dialog
+      v-model="openUpdateView"
+      transition="dialog-top-transition">
+      <FormGrade
+        :grade="gradeObject"
+        :closeModal="closeModal"/>
     </v-dialog>
 
-    <v-dialog v-model="openGrade" max-width="400px">
+    <v-dialog
+      v-model="openGrade"
+      max-width="400px">
       <v-card>
         <v-card-title> Materias de: {{ selectedGrade?.name }}</v-card-title>
         <v-divider></v-divider>
@@ -47,34 +65,41 @@
           <v-chip
             class="mx-1 my-1"
             v-for="(subject, index) in selectedGrade?.subjects"
-            :key="index"
-          >
+            :key="index">
             {{ subject }}
           </v-chip>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="red" @click="openGrade = false">Cerrar</v-btn>
+          <v-btn
+            color="red"
+            @click="openGrade = false"
+            >Cerrar</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
     <v-row class="mt-2">
       <v-col
-        v-for="grade in gradeList"
+        v-for="(grade, index) in gradeList"
         md="6"
         xl="4"
         cols="12"
         lg="4"
-        sm="6"
-        :key="grade._id"
-      >
-        <v-card>
+        :key="index"
+        sm="6">
+        <v-card height="170">
           <v-row>
-            <v-col sm="9" md="9" cols="9">
-              <v-card-title>{{ grade?.name}}</v-card-title>
+            <v-col
+              sm="9"
+              md="9"
+              cols="9">
+              <v-card-title>{{ grade?.name }}</v-card-title>
               <v-card-subtitle>{{ grade.description }}</v-card-subtitle>
             </v-col>
-            <v-col sm="3" md="3" cols="3">
+            <v-col
+              sm="3"
+              md="3"
+              cols="3">
               <div class="text-end">
                 <v-menu>
                   <template v-slot:activator="{ props: menu }">
@@ -82,8 +107,7 @@
                       elevation="0"
                       color="default"
                       icon
-                      v-bind="mergeProps(menu)"
-                    >
+                      v-bind="mergeProps(menu)">
                       <v-icon>mdi-dots-vertical</v-icon>
                     </v-btn>
                   </template>
@@ -100,11 +124,11 @@
             </v-col>
             <v-col class="d-flex justify-end">
               <div
-                v-for="parallel in grade.parallels"
-                class="bg-primary rounded-circle d-inline-block mr-2">
-                  <v-card-title> 
-                    {{ parallel.name }}
-                  </v-card-title>
+                v-for="parallel in gradeFilteredParallels(grade)"
+                class="circleParallels">
+                <v-card-title class="lellert">
+                  {{ parallel.name }}
+                </v-card-title>
               </div>
             </v-col>
           </v-row>
@@ -112,16 +136,15 @@
             <v-btn
               color="orange-lighten-2"
               variant="text"
-              @click="showSubjectInfo(grade)"
-            >
+              @click="showSubjectInfo(grade)">
               Materias
             </v-btn>
             <v-btn
               color="orange-lighten-2"
-              variant="text" 
+              variant="text"
               @click="redirectParallel(grade)"
               class="text-decoration-none">
-                Paralelos
+              Paralelos
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -131,65 +154,105 @@
 </template>
 
 <script setup lang="ts">
-import { mergeProps } from 'vue';
-const openCreateView = ref(false);
-const openUpdateView = ref(false);
-const openGrade = ref(false);
-const gradeObject = ref();
-const gradeStore = useGrade();
-const loading = ref(false);
-const showDeleteConfirmation = ref(false);
-const selectedGrade = ref();
-const router = useRouter()
+  import { mergeProps } from 'vue'
+  const openCreateView = ref(false);
+  const openUpdateView = ref(false);
+  const openGrade = ref(false);
+  const gradeObject = ref();
+  const gradeStore = useGrade();
+  const loading = ref(false);
+  const showDeleteConfirmation = ref(false);
+  const selectedGrade = ref();
+  const router = useRouter();
+  const schoolTerm = useSchoolTerm();
+  const selectedYear = ref();
 
-await gradeStore.getAll();
+  await schoolTerm.getAll();
+  await gradeStore.getAll();
 
-const gradeList = computed(() => 
-  gradeStore.grades
-);
+  const gradeList = computed(() => gradeStore.grades);
+  const schoolList = computed(() => schoolTerm.schools);
+  const currentSchoolTerm = computed(() => schoolTerm.schoolCurrent)
 
-const openModalCreate = () => {
-  openCreateView.value = true;
-};
-
-const redirectParallel = (grade: IGrade) => {
-  gradeStore.setCurretGrade(grade)
-  router.push('/app/parallel')
-}
-
-const closeModal = () => {
-  openCreateView.value = false;
-  openUpdateView.value = false;
-  openGrade.value = false;
-};
-
-const openModalUpdate = (value: IGrade) => {
-  gradeObject.value = value;
-  openUpdateView.value = true;
-};
-
-const deteleGrade = async (id: string) => {
-  try {
-    loading.value = true;
-    await gradeStore.delete(id);
-    loading.value = false;
-  } catch (error) {
-    console.log(error);
+  if (currentSchoolTerm) {
+    selectedYear.value = currentSchoolTerm.value!.name;
   }
-};
 
-const showSubjectInfo = (grade: IGrade) => {
-  selectedGrade.value = grade;
-  openGrade.value = true;
-};
+  const gradeFilteredParallels = (grade: IGrade) => {
+    if (!selectedYear.value || !grade.parallels.length) {
+      return [];
+    } else {
+      return grade.parallels.filter(parallel =>
+        parallel.schoolterm.some(schoolterm => 
+          schoolterm.name === selectedYear.value
+        )
+      );
+    }
+  };
+  
+  const openModalCreate = () => {
+    openCreateView.value = true
+  }
 
-const showConfirmDeleteGrade = (id: string) => {
-  selectedGrade.value = id;
-  showDeleteConfirmation.value = true;
-};
+  const redirectParallel = (grade: IGrade) => {
+    schoolTerm.setCurrentSchoolTermName(selectedYear.value);
+    gradeStore.setCurretGrade(grade);
+    router.push('/app/parallel');
+  }
 
-const deleteConfirmed = async () => {
-  showDeleteConfirmation.value = false;
-  await deteleGrade(selectedGrade.value);
-};
+  const closeModal = () => {
+    openCreateView.value = false;
+    openUpdateView.value = false;
+    openGrade.value = false;
+  }
+
+  const openModalUpdate = (value: IGrade) => {
+    gradeObject.value = value;
+    openUpdateView.value = true;
+  }
+
+  const deteleGrade = async (id: string) => {
+    try {
+      loading.value = true;
+      await gradeStore.delete(id);
+      loading.value = false;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const showSubjectInfo = (grade: IGrade) => {
+    selectedGrade.value = grade;
+    openGrade.value = true;
+  }
+
+  const showConfirmDeleteGrade = (id: string) => {
+    selectedGrade.value = id;
+    showDeleteConfirmation.value = true;
+  }
+
+  const deleteConfirmed = async () => {
+    showDeleteConfirmation.value = false;
+    await deteleGrade(selectedGrade.value);
+  }
 </script>
+
+<style>
+  .circleParallels {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #08ff94;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #000000;
+    font-weight: 50;
+    font-size: 12px;
+    margin-right: 5px;
+
+    .lellert {
+      font-size: 14px;
+    }
+  }
+</style>

@@ -36,6 +36,11 @@ const items = [
     icon: 'mdi-home-city'
   },
   {
+    name: 'Usuarios',
+    route: '/app/user',
+    icon: 'mdi-home-city'
+  },
+  {
     name: 'Estudiantes',
     route: '/app/student',
     icon: 'mdi-home-city'

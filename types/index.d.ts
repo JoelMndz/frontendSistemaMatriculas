@@ -6,6 +6,7 @@ declare global {
     firstName: string
     lastName: string
     email: string
+    role: 'admin' | 'secretary'
   }
   interface ISchoolTerm {
     _id: string

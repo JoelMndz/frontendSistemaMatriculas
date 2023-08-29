@@ -2,7 +2,7 @@
   <VContainer>
     <VRow>
       <VCol>
-        <h1 class="text-h4 text-center">Módulo de estudiante</h1>
+        <h1 class="text-h4 text-center">Módulo de usuarios</h1>
       </VCol>
     </VRow>
     <VRow>
@@ -11,13 +11,13 @@
           elevation="5"
           color="blue-darken-1"
           icon="mdi-plus"
-          @click = "handleButtonAdd"
+          @click="setShowForm(true)"
         />
       </VCol>
     </VRow>
     <VRow>
       <VCol>
-        <TableStudent />
+        <TableUser />
       </VCol>
     </VRow>
     <VDialog
@@ -26,7 +26,7 @@
       max-width="600px"
       transition="dialog-transition"
     >
-      <FormStudent :student="currentStudent"/>
+      <FormUser />
     </VDialog>
   </VContainer>
 </template>
@@ -34,13 +34,9 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 
-const studentStore = useStudentStore()
-const {showForm, currentStudent} = storeToRefs(studentStore)
-
-const handleButtonAdd = ()=>{
-  studentStore.setCurrentStudent(null)
-  studentStore.setShowForm(true);
-}
+const userStore = useUserStore()
+const {setShowForm} = userStore
+const {showForm} = storeToRefs(userStore)
 </script>
 
 <style scoped>

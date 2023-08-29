@@ -73,4 +73,12 @@ declare global {
     professors: IProfessor[]
     schoolterm: ISchoolTerm[]
   }
+
+  interface IEnrollment {
+    _id: string;
+    _student: string;
+    _parallel: string;
+    date: number;
+    endNote: number
+  }
 }

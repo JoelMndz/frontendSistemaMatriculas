@@ -31,14 +31,9 @@ const iconTheme = computed(() => {
 })
 
 const handleNavClick = (sectionId: string) => {
-  if (route.path === "/login") {
+  if (route.path !== "/") {
     router.push("/")
-  }
-  if (route.path === "/register") {
-    router.push("/")
-  }
-
-  if (route.path === "/") {
+  }else{
     scrollToSection(sectionId)
   }
 }

@@ -82,4 +82,9 @@ declare global {
     _student: IStudent;
     _parallel: IParallel;
   }
+
+  interface ISession{
+    role: string,
+    token: string
+  }
 }

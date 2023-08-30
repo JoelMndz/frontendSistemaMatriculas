@@ -15,11 +15,16 @@ export default defineNuxtConfig({
     dirs: ['~/components']
   },
   modules:[
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@sidebase/nuxt-auth'
   ],
   runtimeConfig:{
     public:{
       API: process.env.API
-    }
+    },
+    SECRET: process.env.SECRET
+  },
+  auth:{
+    origin: process.env.DOMAIN,
   }
 })

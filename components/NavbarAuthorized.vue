@@ -20,10 +20,10 @@ import { storeToRefs } from 'pinia';
 import { useTheme } from 'vuetify/lib/framework.mjs';
 const theme = useTheme();
 
-const authStore = useAuthStore()
+const {signOut} = useAuth()
 
-const logout = ()=>{
-  authStore.logout()
+const logout = async()=>{
+  await signOut({redirect:false})
   navigateTo('/')
 }
 const changeTheme = () => {

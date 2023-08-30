@@ -1,5 +1,5 @@
+import { Session } from "next-auth"
 import { UseFetchOptions } from "nuxt/app"
-import { useAuthStore } from "~/store/auth"
 
 export const useFetchApi = async <T>(
   url: string,
@@ -7,12 +7,14 @@ export const useFetchApi = async <T>(
 ) => {
   const runtimeConfig = useRuntimeConfig()
   const { API } = runtimeConfig.public
-  const token = useCookie("token")
+  const {data:session} = useAuth()
+  
+  let token = session?.value ? (session.value as Session & ISession).token : null;
 
   const { data, error, execute } = await useFetch(`${url}`, {
     ...options,
     baseURL: API,
-    headers: !token.value ? {} : { Authorization: `Bearer ${token.value}` }
+    headers: !token ? {} : { Authorization: `Bearer ${token}` }
   })
 
   return { data, error, execute }

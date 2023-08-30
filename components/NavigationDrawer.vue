@@ -6,7 +6,7 @@
   >
     <VListItem
       prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-      title="Tommy Precidio"
+      :title="data?.user?.name!"
       nav
     >
     </VListItem>
@@ -14,21 +14,28 @@
     <VDivider />
 
     <VList>
-      <VListItem
+      <template
         v-for="i in items"
         :key="i.name"
-        link
-        :to="i.route"
-        :prepend-icon="i.icon"
-        :title="i.name"
-        :value="i.name"
-        @click="$router.push(i.route)"
-      />
+      >
+        <VListItem
+          v-if="i?.role !== 'admin' || i?.role === 'admin' &&  (data as any)?.role === 'admin'"
+          link
+          :to="i.route"
+          :prepend-icon="i.icon"
+          :title="i.name"
+          :value="i.name"
+          @click="$router.push(i.route)"
+        />
+      </template>
     </VList>
   </VNavigationDrawer>
 </template>
 
 <script setup lang="ts">
+
+const {data} = useAuth()
+
 const items = [
   {
     name: 'Dashboard',
@@ -38,7 +45,8 @@ const items = [
   {
     name: 'Usuarios',
     route: '/app/user',
-    icon: 'mdi-home-city'
+    icon: 'mdi-home-city',
+    role: 'admin'
   },
   {
     name: 'Estudiantes',

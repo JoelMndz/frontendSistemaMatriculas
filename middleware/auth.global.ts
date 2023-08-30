@@ -1,17 +1,19 @@
+import { Session } from "next-auth";
 
 export default defineNuxtRouteMiddleware((to, from) => {
-  const token = useCookie('token')
-  const {setIsAuthenticated} = useAuthStore();
+  const {data} = useAuth()
+  
+  let token = data?.value ? (data.value as Session & ISession).token : null;
   
   if(to.name?.toString() === 'app'){
     return navigateTo('/app/dashboard')
   }
 
-  if (token.value && !to.name?.toString().includes('app')) {
+  if (token && !to.name?.toString().includes('app')) {
     return navigateTo('/app/dashboard')
   }
 
-  if (!token.value && to.name?.toString().includes('app')) {
+  if (!token && to.name?.toString().includes('app')) {
     return navigateTo('/login')
   }
 })

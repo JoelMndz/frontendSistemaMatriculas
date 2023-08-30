@@ -40,6 +40,7 @@
           <NuxtLink to="/register">Registrarse como administrador</NuxtLink>
         </VCardActions>
       </VCard>
+      {{ data }}
     </div>
   </v-container>
 </template>
@@ -53,9 +54,9 @@ const dataForm = reactive({
   password: "12345678",
 })
 const loading = ref(false);
-const authStore = useAuthStore();
+const {signIn, data} = useAuth()
 const showPassword = ref(false);
-const {resetError} = useErrorStore();
+const {resetError,setError} = useErrorStore();
 
 const emailRules = [
   (value: any) => !!value || "El correo es requerido",
@@ -73,9 +74,12 @@ const login = async() => {
   const {valid} = await form.value!.validate();
   if(!valid) return;
   resetError()
-  await authStore.login(dataForm.email, dataForm.password)
-  loading.value = false
-  await navigateTo('/app/dashboard')
+  const response = await signIn('credentials',{...dataForm, redirect:false})
+  loading.value = false  
+  if(response?.error)
+    setError({message:'Credenciales incorrectas!'})
+  else
+    await navigateTo('/app/dashboard')
 }
 
 onUnmounted(()=>{

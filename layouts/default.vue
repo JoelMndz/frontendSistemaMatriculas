@@ -15,8 +15,9 @@
 
 <script setup lang="ts">
 
-const authStore = useAuthStore()
-const isAuthenticated = computed(()=> authStore.isAutenticated)
+const {data} = useAuth()
+
+const isAuthenticated = computed(()=> !!data.value)
 
 </script>
 

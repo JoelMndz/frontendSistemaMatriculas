@@ -74,4 +74,9 @@ declare global {
     professors: IProfessor[]
     schoolterm: ISchoolTerm[]
   }
+
+  interface ISession{
+    role: string,
+    token: string
+  }
 }

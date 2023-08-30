@@ -11,7 +11,7 @@
         >
           <h2 class="text-h1">
             IPT
-            <h2 class="secctionHome">Bilingüe</h2>
+            <span class="secctionHome">Bilingüe</span>
             Agua Fría #2
           </h2>
           <p class="mt-2 text-left">
@@ -109,13 +109,13 @@
 
               <v-spacer></v-spacer>
 
-              <v-btn
+              <!-- <v-btn
                 :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
                 @click="show = !show"
-              ></v-btn>
+              ></v-btn> -->
             </v-card-actions>
 
-            <v-expand-transition>
+            <!-- <v-expand-transition>
               <div v-show="show">
                 <v-divider></v-divider>
 
@@ -128,7 +128,7 @@
                   way to escape.
                 </v-card-text>
               </div>
-            </v-expand-transition>
+            </v-expand-transition> -->
           </v-card>
         </v-col>
         <v-col
@@ -139,11 +139,15 @@
           <v-card
             variant="tonal"
             class="text-justify elevation-5 rounded-xl rounded-be-0 pa-2"
-            text="Alcanzar la excelencia educativa con la práctica permanente de los
-        valores, la conservación de nuestro medio ambiente y el desarrollo de
-        proyectos científicos que motivan la formación integral de nuestros
-        educandos."
-          />
+            
+          >
+            <VCardText>
+              Alcanzar la excelencia educativa con la práctica permanente de los
+              valores, la conservación de nuestro medio ambiente y el desarrollo de
+              proyectos científicos que motivan la formación integral de nuestros
+              educandos.
+            </VCardText>
+          </v-card>
         </v-col>
       </v-row>
     </section>
@@ -157,11 +161,14 @@
           <v-card
             variant="tonal"
             class="text-justify elevation-5 rounded-xl rounded-be-0 pa-2"
-            text="Propiciar un proceso enseñanza-aprendizaje de calidad, basado en
-        principios culturales, ambientales, tecnológicos, investigativos,
-        morales, cívica y ética que fortalezcan la creación de equipos y las
-        relaciones humanas necesarias para el éxito."
-          />
+          >
+          <VCardText>
+            Propiciar un proceso enseñanza-aprendizaje de calidad, basado en
+            principios culturales, ambientales, tecnológicos, investigativos,
+            morales, cívica y ética que fortalezcan la creación de equipos y las
+            relaciones humanas necesarias para el éxito.
+          </VCardText>
+        </v-card>
         </v-col>
         <v-col
           sm="12"
@@ -229,7 +236,9 @@
 </template>
 
 <script>
-const show = ref(false)
+import { VCardText } from 'vuetify/lib/components/index.mjs';
+
+// const show = ref(false)
 
 </script>
 

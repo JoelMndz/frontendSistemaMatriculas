@@ -17,7 +17,7 @@ const { current: currentSchoolTerm } = storeToRefs(schoolTerm)
 const parallelData = computed(() => {
   const currentGradeNew = {...currentGrade.value}
     currentGradeNew.parallels = currentGradeNew.parallels?.filter(item => 
-      item.schoolterm && item.schoolterm.length > 0 && item.schoolterm[0].name === currentSchoolTerm.value
+      item.schoolterm && item.schoolterm.length > 0 && item.schoolterm[0]._id === currentSchoolTerm.value
     )
   return currentGradeNew
 })
@@ -78,7 +78,7 @@ onMounted(() => {
             cols="12"
             lg="4"
             sm="6"
-            v-for="paralell in parallelData.parallels"
+            v-for="paralell in currentGrade?.parallels"
             :key="paralell._id">
             <v-card>
                 <VRow>

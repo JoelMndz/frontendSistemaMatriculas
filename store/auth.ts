@@ -39,9 +39,9 @@ export const useAuthStore = defineStore('auth',{
         setError({message: 'Solo es posible registrar un usuario'});
         return;
       }
-      const token = useCookie('token');
-      token.value = response.token; 
-      this.user = response.user;
+      // const token = useCookie('token');
+      // token.value = response.token; 
+      // this.user = response.user;
     },
 
     async login(email:string, password: string){

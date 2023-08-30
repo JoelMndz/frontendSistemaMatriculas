@@ -9,8 +9,9 @@
     <v-select
       v-model="selectedYear"
       :items="schoolList"
-      item-value="name"
+      item-value="_id"
       item-title="name"
+      @update:model-value=""
       label="Año electivo"/>
 
     <v-dialog v-model="showDeleteConfirmation">
@@ -64,7 +65,7 @@
         <v-card-text>
           <v-chip
             class="mx-1 my-1"
-            v-for="(subject, index) in selectedGrade?.subjects"
+            v-for="(subject, index) in selectedGrade.subjects"
             :key="index">
             {{ subject }}
           </v-chip>
@@ -80,12 +81,11 @@
 
     <v-row class="mt-2">
       <v-col
-        v-for="(grade, index) in gradeList"
+        v-for="grade in gradeList"
         md="6"
         xl="4"
         cols="12"
         lg="4"
-        :key="index"
         sm="6">
         <v-card height="170">
           <v-row>
@@ -124,7 +124,7 @@
             </v-col>
             <v-col class="d-flex justify-end">
               <div
-                v-for="parallel in gradeFilteredParallels(grade)"
+                v-for="parallel in grade.parallels"
                 class="circleParallels">
                 <v-card-title class="lellert">
                   {{ parallel.name }}
@@ -168,34 +168,21 @@
   const selectedYear = ref();
 
   await schoolTerm.getAll();
-  await gradeStore.getAll();
 
   const gradeList = computed(() => gradeStore.grades);
   const schoolList = computed(() => schoolTerm.schools);
   const currentSchoolTerm = computed(() => schoolTerm.schoolCurrent)
+  const defaultYear = currentSchoolTerm ? currentSchoolTerm.value!._id : null;
 
   if (currentSchoolTerm) {
-    selectedYear.value = currentSchoolTerm.value!.name;
+    selectedYear.value = currentSchoolTerm.value!._id;
   }
-
-  const gradeFilteredParallels = (grade: IGrade) => {
-    if (!selectedYear.value || !grade.parallels.length) {
-      return [];
-    } else {
-      return grade.parallels.filter(parallel =>
-        parallel.schoolterm.some(schoolterm => 
-          schoolterm.name === selectedYear.value
-        )
-      );
-    }
-  };
   
   const openModalCreate = () => {
     openCreateView.value = true
   }
 
   const redirectParallel = (grade: IGrade) => {
-    schoolTerm.setCurrentSchoolTermName(selectedYear.value);
     gradeStore.setCurretGrade(grade);
     router.push('/app/parallel');
   }
@@ -235,6 +222,16 @@
     showDeleteConfirmation.value = false;
     await deteleGrade(selectedGrade.value);
   }
+
+  if (defaultYear) {
+    await gradeStore.getAll(defaultYear);
+  }
+
+watch(selectedYear, async (newSelectedYear) => {
+  if (newSelectedYear) {
+    await gradeStore.getAll(newSelectedYear);
+  }
+});
 </script>
 
 <style>

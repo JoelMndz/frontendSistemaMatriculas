@@ -88,9 +88,10 @@
 
 <script setup lang="ts">
 import moment from 'moment';
+import { storeToRefs } from 'pinia';
 
 const studentStore = useStudentStore()
-const students = computed(()=> studentStore.students)
+const {students} = storeToRefs(studentStore)
 const showConfirmDelete = ref(false)
 const loading = ref(false)
 const studentDelete = ref<IStudent| null>(null)

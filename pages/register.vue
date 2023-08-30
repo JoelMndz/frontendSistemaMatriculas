@@ -82,7 +82,8 @@ const dataForm = reactive({
 const authStore = useAuthStore()
 const loading = ref(false)
 const showPassword = ref(false)
-const { resetError } = useErrorStore();
+const { resetError,error } = useErrorStore();
+const isError = computed(()=> !!error)
 
 const nameRules = [(value: any) => !!value || "El nombre es requerido"]
 const lastNameRules = [(value: any) => !!value || "El apellido es requerido"]
@@ -105,7 +106,7 @@ const register = async () => {
   if (!valid) return
   await authStore.register(dataForm)
   loading.value = false
-  //await navigateTo("/app/dashboard")
+  if(!isError.value) await navigateTo("/login")
 }
 
 onUnmounted(() => {

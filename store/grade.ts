@@ -5,10 +5,6 @@ interface IState {
   gradeCurrent: IGrade | null
 }
 
-interface IGradeResponse {
-  gradeCurrent: IGrade
-}
-
 interface CreateGrade {
   name: string
   description: string
@@ -24,14 +20,13 @@ interface UpdateGrade {
 export const useGrade = defineStore('grade', {
   state: (): IState => ({
     grades: [],
-    gradeCurrent: null
+    gradeCurrent: null,
   }),
 
   actions: {
 
-    async getAll () {
-      const { parallelCurrent } = useParallelStore()
-      const { data, error } = await useFetchApi('/api/grade', {
+    async getAll (schoolTermId: string) {
+      const { data, error } = await useFetchApi(`/api/grade?schoolTermId=${schoolTermId}`, {
         method: 'GET'
       })
       if(!error.value){
@@ -45,22 +40,22 @@ export const useGrade = defineStore('grade', {
         body: values
       })
 
-      const response = data.value as IGradeResponse;
       if (!error.value) {
-        this.gradeCurrent = response.gradeCurrent;
+        const response = data.value as IGrade;
+        this.grades.push(response)
       }
     }, 
 
     async update (id: string, values: UpdateGrade) {
-
       const { data, error } = await useFetchApi(`/api/grade/${id}`, {
         method: 'PATCH',
         body: values
       })
 
-      const response = data.value as IGradeResponse;
       if (!error.value) {
-        this.gradeCurrent = response.gradeCurrent;
+        const response = data.value as IGrade;
+        this!.grades = this!.grades.map(grade => grade._id === response._id ? response : grade)
+        console.log(response)
       }
     },
 
@@ -72,7 +67,7 @@ export const useGrade = defineStore('grade', {
     },
 
     setCurretGrade (grade: IGrade | null) {
-      this.gradeCurrent = grade;
+      this.gradeCurrent = grade;   
     }
   }
 })

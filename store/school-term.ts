@@ -3,6 +3,7 @@ import { defineStore } from "pinia"
 interface IState {
   schools: ISchoolTerm[]
   schoolCurrent: ISchoolTerm | null
+  current: string
 }
 
 interface ICreateResponse {
@@ -26,7 +27,8 @@ interface CreateSchoolTerm {
 export const useSchoolTerm = defineStore("school", {
   state: (): IState => ({
     schools: [],
-    schoolCurrent: null
+    schoolCurrent: null,
+    current: ''
   }),
   actions: {
     async getAll() {
@@ -36,7 +38,10 @@ export const useSchoolTerm = defineStore("school", {
 
       if (!error.value) {
         this.schools = data.value as ISchoolTerm[];
-        
+        const currentSchoolTerm = this.schools.find(school => school.current)
+        if (currentSchoolTerm) {
+          this.schoolCurrent = currentSchoolTerm;
+        }
       }
     },
 
@@ -72,6 +77,10 @@ export const useSchoolTerm = defineStore("school", {
 
     setSchoolTermCurrent(school: ISchoolTerm) {
       this.schoolCurrent = school;
+    },
+
+    setCurrentSchoolTermName(name: string) {
+      this.current = name;
     }
   }
 })

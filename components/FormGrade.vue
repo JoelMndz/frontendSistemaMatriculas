@@ -103,8 +103,6 @@ const createGrade = async () => {
     if(closeModalCreate) props.closeModal();
   } catch (error) {
     console.log(error, 'error while creating the grade');
-  } finally {
-    await grade.getAll();
   }
 }
 
@@ -120,8 +118,6 @@ const updateGrade = async () => {
     if(closeModalCreate) props.closeModal()
   } catch (error) {
     console.log(error, 'error updating the grade ');
-  } finally {
-    await grade.getAll()
   }
 }
 

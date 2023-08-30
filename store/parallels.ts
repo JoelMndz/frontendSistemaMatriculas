@@ -30,42 +30,40 @@ export const useParallelStore = defineStore('parallels', {
 
     async create (values: CreteParallel) {
       const { setError } = useErrorStore();
-      const { grades } = useGrade();
+      const { gradeCurrent } = useGrade();
       const { data, error } = await useFetchApi('/api/parallel', {
         method: 'POST',
         body: values
       })
-
-      const response = data.value as IParallel
+      
       if(error.value){
         setError({ message: 'Este nombre de paralelo ya existe en este curso'})
+        return;
       }
-      this.parallels.push(response)
 
-      if(grades && grades.length > 0){
-        const gradeIndex = grades.findIndex(grade => grade._id === values._grade)
-        if(gradeIndex !== -1){
-          grades[gradeIndex].parallels.push(response)
-        }
-      }
+      const response = data.value as IParallel
+      gradeCurrent!.parallels.push({ ...response, professors: [response._professor as IProfessor] })
+
+      console.log("store create", response)
     },
 
     async update (id: string, values: UpdateParallel) {
-      const { setError } = useErrorStore();
-      const { grades, gradeCurrent } = useGrade();
+    const { setError } = useErrorStore();
+      const { gradeCurrent } = useGrade();
       const { data, error } = await useFetchApi(`/api/parallel/${id}`, {
         method: "PATCH",
         body: values
       })
 
-      const response = data.value as IParallel
       if(error.value){  
         setError({ message: 'Este nombre de paralelo ya existe en este curso'})
+        return;
       }
+      const response = data.value as IParallel;
 
-      this.parallels = this.parallels.map(parallel => {
-          return parallel._id === response._id ? response : parallel;
-        });
+      response.professors = [response._professor as IProfessor]
+      gradeCurrent!.parallels = gradeCurrent!.parallels.map(parallel => parallel._id === response._id ? response : parallel)
+      console.log(response)
     },
 
     async delete (id: string) {
@@ -77,6 +75,7 @@ export const useParallelStore = defineStore('parallels', {
 
       if(error.value){
         setError({ message: 'ocurrio un error al eliminar el paralelo'})
+        return;
       }
 
       this.parallels = this.parallels.filter(parallel => parallel._id !== id)

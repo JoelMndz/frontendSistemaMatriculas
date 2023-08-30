@@ -14,64 +14,64 @@ declare global {
     description: string
     current: boolean
   }
-  interface IError{
-    code?:number,
-    title?:string,
-    message: string,
+  interface IError {
+    code?: number
+    title?: string
+    message: string
   }
 
   interface IGrade {
-    _id: string,
-    name: string,
-    description: string,
-    subjects: string[],
+    _id: string
+    name: string
+    description: string
+    subjects: string[]
     parallels: IParallel[]
-    professors: IProfessor[]
   }
 
-  interface IRepresentative{
-    _id: string,
-    fullName: string,
-    cedula: string,
-    email: string,
-    imageCedulaUrl: string,
-    birthDate: number,
-    address: string,
+  interface IRepresentative {
+    _id: string
+    fullName: string
+    cedula: string
+    email: string
+    imageCedulaUrl: string
+    birthDate: number
+    address: string
   }
 
   interface IProfessor {
-    _id: string,
-    fullName: string,
-    cedula: string,
-    dateBirth: number,
-    email: string,
-    address: string,
-    disability: string,
-    cv: string, 
+    _id: string
+    fullName: string
+    cedula: string
+    dateBirth: number
+    email: string
+    address: string
+    disability: string
+    cv: string
   }
 
-  interface IStudent{
-    _id: string,
-    fullName: string,
-    cedula: string,
-    birthDate: number,
-    fatherName: string,
-    motherName: string,
-    address: string,
-    disability?: string,
-    allergies?: string,
-    cedulaImageUrl: string,
-    bulletinImageUrl: string,
-    _representative1: IRepresentative,
-    _representative2: IRepresentative | null,
+  interface IStudent {
+    _id: string
+    fullName: string
+    cedula: string
+    birthDate: number
+    fatherName: string
+    motherName: string
+    address: string
+    disability?: string
+    allergies?: string
+    cedulaImageUrl: string
+    bulletinImageUrl: string
+    _representative1: IRepresentative
+    _representative2: IRepresentative | null
   }
-  
+
   interface IParallel {
-    _id: string,
-    name: string,
-    quotas: number,
-    _grade: string,
-    _professor: string
-    professors: IProfessor[]; 
+    _id: string
+    name: string
+    quotas: number
+    _grade: string
+    _professor: string | IProfessor
+    professors: IProfessor[]
+    schoolterm: ISchoolTerm[]
   }
 }

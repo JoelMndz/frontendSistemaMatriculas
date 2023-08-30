@@ -63,7 +63,7 @@ const items = [
   {
     name: 'Curso',
     route: '/app/grade',
-    icon: 'mdi-home-city'
+    icon: 'mdi-account-school'
   },
   {
     name: 'Periodo Lectivo',

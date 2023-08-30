@@ -69,17 +69,15 @@ declare global {
     _id: string
     name: string
     quotas: number
-    _grade: string
+    _grade: IGrade
     _professor: string | IProfessor
     professors: IProfessor[]
-    schoolterm: ISchoolTerm[]
+    schoolterm: ISchoolTerm
   }
 
   interface IEnrollment {
     _id: string;
-    _student: string;
-    _parallel: string;
-    date: number;
-    endNote: number
+    _student: IStudent;
+    _parallel: IParallel;
   }
 }

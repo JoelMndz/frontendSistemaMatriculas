@@ -7,15 +7,11 @@ interface IState{
 }
 
 interface UpdateEnrollmet {
-  date: number;
-  endNote: number;
   _student: string;
   _parallel: string;
 }
 
 interface CreateEnrollment {
-  date: number;
-  endNote: number;
   _student: string;
   _parallel: string;
 }
@@ -25,7 +21,7 @@ export const useEnrollmentStore = defineStore('enrollment', {
   state: (): IState => ({
     enrollments: [],
     currentEnrollment: null,
-    showForm: false
+    showForm: false,
   }),
 
   actions: {
@@ -37,11 +33,12 @@ export const useEnrollmentStore = defineStore('enrollment', {
 
       if (!error.value) {
         this.enrollments = data.value as IEnrollment[];
+        console.table(data.value)
       }
     },
 
     async create(values: CreateEnrollment) {
-      const { setError } = useErrorStore()
+      const { setError } = useErrorStore();
       const { data, error } = await useFetchApi('/api/enrollment', {
         method: 'POST',
         body: values
@@ -51,8 +48,8 @@ export const useEnrollmentStore = defineStore('enrollment', {
         setError({ message: 'error al crear la matricula' })
       }
 
-      const response = data.value as IEnrollment
-      this.enrollments.push(response)
+      const response = data.value as IEnrollment;
+      this.enrollments.push(response);
     }, 
 
     async update(id: string, values: UpdateEnrollmet) {

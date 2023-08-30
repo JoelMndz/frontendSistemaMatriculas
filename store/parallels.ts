@@ -28,6 +28,16 @@ export const useParallelStore = defineStore('parallels', {
   }),
   actions: {
 
+    async getAll () {
+      const { data, error } = await useFetchApi('/api/parallel', {
+        method: 'GET'
+      });
+
+      if(!error.value){
+        this.parallels = data.value as IParallel[];
+      }
+    },
+
     async create (values: CreteParallel) {
       const { setError } = useErrorStore();
       const { gradeCurrent } = useGrade();

@@ -5,37 +5,27 @@
       width="400"
       class="pa-5">
       <v-card-title class="text-center text-subtitle-h4">
-        crear o actualizar
+        {{ idEnrollment ? 'Actualizar' : 'Crear' }}
       </v-card-title>
       <Error /> 
       <VForm
         ref="form"
         fast-fail
-        @submit.prevent="">
-        
-        <v-text-field
-          variant="underlined"
-          label="Nota final"
-          :rules="rules.quotas"
-          v-model="formData.endNote"/>
+        @submit.prevent="handleSubmit">
 
-        <v-select 
-          hint="Seleccione un paralelo"
-          persistent-hint
-          single-line
+        <v-autocomplete
+          label="Paralelo"
           v-model="formData._parallel"
-          :items="getParallelOptions"
+          :items="parallels"
           item-title="name"
           item-value="_id"
           variant="underlined"/>
         
-        <v-select 
-          hint="Seleccione un estudiante"
-          persistent-hint
-          single-line
+        <v-autocomplete 
+          label="Estudiantes"
           v-model="formData._student"
-          :items="getStudenOptions"
-          item-title="name"
+          :items="students"
+          item-title="fullName"
           item-value="_id"
           variant="underlined"/>
 
@@ -54,7 +44,7 @@
                 variant="text"
                 type="submit"
                 color="blue-darken-1">
-                crear o actualizar
+                  {{ idEnrollment ? 'Actualizar' : 'Crear' }}
               </v-btn>
             </v-col>
           </v-row>
@@ -67,55 +57,54 @@
 import { VForm } from 'vuetify/lib/components/index.mjs';
 const errorStore = useErrorStore();
 const listStudents = useStudentStore();
+const listParallels = useParallelStore();
 const enrollmentStore = useEnrollmentStore();
 const listParrallels = useParallelStore();
 const loading = ref(false);
 
-await listStudents.getAll()
-const parallels = listParrallels.parallels
-const students = listStudents.students;
+await listStudents.getAll();
+await listParrallels.getAll();
 
-const error = computed(() => errorStore.error)
-const getStudenOptions = computed(() => {
-  const options = [] 
-  for (const student of students){
-    options.push({ name: student.fullName, _id: student._id });
-  }
-
-  return options;
+const props = defineProps({
+  enrollment: Object as () => IEnrollment | null
 })
 
-const getParallelOptions = computed(() => {
-  const options = [] 
-  for (const parallel of parallels){
-    options.push({ name: parallel.name, _id: parallel._id });
-  }
-  return options;
-})
+const idEnrollment = props.enrollment?._id;
+
+const error = computed(() => errorStore.error);
+const students = computed(() => listStudents.students);
+const parallels = computed(() => listParallels.parallels);
 
 interface IFormData{
-  date: string,
-  endNote: string,
   _student: string,
   _parallel: string
 } 
 
-
 const form = ref<VForm | null>(null)
 const formData = reactive<IFormData>({
-  date: '',
-  endNote: '8.4',
-  _parallel:'',
-  _student: ''
+  _parallel: props.enrollment?._parallel?._id || '',
+  _student: props.enrollment?._student?._id ||''
 })
 
+
+const handleSubmit = async () => {
+  loading.value = true;
+  errorStore.resetError()
+  const { valid } = await form.value!.validate();
+  if (valid){
+    if(!props.enrollment){
+      await enrollmentStore.create(formData);
+    } else {
+      // update
+    }
+    if(!error.value) closeModal();
+  }
+  loading.value = false;
+}
 const rules = {
-  quotas: [ (value: string) => { return !!value || 'El nombre es obligatorio!' },
-  ],
   professor: [ (value: string) => { return !!value || 'Seleccion un profesor'}
   ],
   parallel: [ (value: string) => { return !!value || 'Seleccione un paralelo'}]
-
 }
 
 const closeModal = () => { 

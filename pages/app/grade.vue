@@ -6,13 +6,17 @@
         Crear Grado
       </v-btn>
 
-    <v-select
-      v-model="selectedYear"
-      :items="schoolList"
-      item-value="_id"
-      item-title="name"
-      @update:model-value=""
-      label="Año electivo"/>
+      <v-row>
+        <v-col md="3">
+          <v-select
+            v-model="selectedYear"
+            :items="schoolList"
+            item-value="_id"
+            item-title="name"
+            @update:model-value=""
+            label="Año electivo"/>
+        </v-col>
+      </v-row>
 
     <v-dialog v-model="showDeleteConfirmation">
       <v-card
@@ -79,7 +83,7 @@
       </v-card>
     </v-dialog>
 
-    <v-row class="mt-2">
+    <v-row>
       <v-col
         v-for="grade in gradeList"
         md="6"

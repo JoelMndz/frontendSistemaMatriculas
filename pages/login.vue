@@ -49,7 +49,7 @@ import { VCardTitle, VForm } from 'vuetify/lib/components/index.mjs';
 
 const form = ref<VForm |null>(null);
 const dataForm = reactive({
-  email: "admin@gmail.com",
+  email: "asistente.sistema.escolar@gmail.com",
   password: "12345678",
 })
 const loading = ref(false);

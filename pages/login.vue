@@ -18,15 +18,22 @@
             :rules="emailRules"
             required
             />
-          <v-text-field
-            variant="underlined"
-            class="mt-3"
-            v-model="dataForm.password"
-            :type="showPassword ? 'text' : 'password'"
-            :rules="passwordRules"
-            label="Contraseña"
-            required
-          />
+          <VContainer>
+            <VRow>
+              <v-text-field
+                variant="underlined"
+                class="mt-3"
+                v-model="dataForm.password"
+                :type="showPassword ? 'text' : 'password'"
+                :rules="passwordRules"
+                label="Contraseña"
+                required
+              />
+            </VRow>
+            <VRow>
+              <NuxtLink to="/recovery">¿Olvidó su contraseña?</NuxtLink>
+            </VRow>
+          </VContainer>
             <v-btn
               class="mt-4"
               color="primary"
@@ -40,7 +47,6 @@
           <NuxtLink to="/register">Registrarse como administrador</NuxtLink>
         </VCardActions>
       </VCard>
-      {{ data }}
     </div>
   </v-container>
 </template>
@@ -72,7 +78,9 @@ const passwordRules = [
 const login = async() => {
   loading.value = true
   const {valid} = await form.value!.validate();
-  if(!valid) return;
+  if(!valid){
+    loading.value = false  
+  }
   resetError()
   const response = await signIn('credentials',{...dataForm, redirect:false})
   loading.value = false  

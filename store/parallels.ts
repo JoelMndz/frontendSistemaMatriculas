@@ -73,7 +73,6 @@ export const useParallelStore = defineStore('parallels', {
 
       response.professors = [response._professor as IProfessor]
       gradeCurrent!.parallels = gradeCurrent!.parallels.map(parallel => parallel._id === response._id ? response : parallel)
-      console.log(response)
     },
 
     async delete (id: string) {

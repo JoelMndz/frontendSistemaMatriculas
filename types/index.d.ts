@@ -26,6 +26,7 @@ declare global {
     description: string
     subjects: string[]
     parallels: IParallel[]
+    _schoolTerm: ISchoolTerm;
   }
 
   interface IRepresentative {
@@ -73,6 +74,7 @@ declare global {
     _professor: string | IProfessor
     professors: IProfessor[]
     schoolterm: ISchoolTerm
+    _schoolTerm: ISchoolTerm;
   }
 
   interface IEnrollment {

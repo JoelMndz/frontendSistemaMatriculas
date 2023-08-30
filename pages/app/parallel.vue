@@ -17,7 +17,7 @@ const { current: currentSchoolTerm } = storeToRefs(schoolTerm)
 const parallelData = computed(() => {
   const currentGradeNew = {...currentGrade.value}
     currentGradeNew.parallels = currentGradeNew.parallels?.filter(item => 
-      item.schoolterm && item.schoolterm.length > 0 && item.schoolterm[0]._id === currentSchoolTerm.value
+      item.schoolterm && item.schoolterm._id === currentSchoolTerm.value
     )
   return currentGradeNew
 })

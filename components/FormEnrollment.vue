@@ -9,6 +9,7 @@
       </v-card-title>
       <Error /> 
       <VForm
+        class="mt-2"
         ref="form"
         fast-fail
         @submit.prevent="handleSubmit">
@@ -16,7 +17,7 @@
         <v-autocomplete
           label="Paralelo"
           v-model="formData._parallel"
-          :items="parallels"
+          :items="optionParallelsAndCourses"
           item-title="name"
           item-value="_id"
           variant="underlined"/>
@@ -60,6 +61,8 @@ const listStudents = useStudentStore();
 const listParallels = useParallelStore();
 const enrollmentStore = useEnrollmentStore();
 const listParrallels = useParallelStore();
+const schoolTerm = useSchoolTerm();
+
 const loading = ref(false);
 
 await listStudents.getAll();
@@ -74,6 +77,21 @@ const idEnrollment = props.enrollment?._id;
 const error = computed(() => errorStore.error);
 const students = computed(() => listStudents.students);
 const parallels = computed(() => listParallels.parallels);
+const currentSchoolTerm = computed(() => schoolTerm.schoolCurrent)
+
+const optionParallelsAndCourses = computed(() => {
+  const options =  parallels.value.filter(parallel => {
+    return parallel?._schoolTerm?._id === currentSchoolTerm.value?._id;
+  }).map(parallel => {
+    const nameParallel = parallel?.name || 'n/a';
+    const nameCourse = parallel?._grade?.name || 'n/a';
+    const parallelAndCourse = `${nameCourse} - ${nameParallel}`;
+    const idParallel = parallel?._id;
+
+    return { _id: idParallel, name: parallelAndCourse};
+  })
+  return options;
+})
 
 interface IFormData{
   _student: string,
@@ -82,8 +100,8 @@ interface IFormData{
 
 const form = ref<VForm | null>(null)
 const formData = reactive<IFormData>({
-  _parallel: props.enrollment?._parallel?._id || '',
-  _student: props.enrollment?._student?._id ||''
+  _parallel: '',
+  _student: ''
 })
 
 

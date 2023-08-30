@@ -33,7 +33,6 @@ export const useEnrollmentStore = defineStore('enrollment', {
 
       if (!error.value) {
         this.enrollments = data.value as IEnrollment[];
-        console.table(data.value)
       }
     },
 
@@ -45,11 +44,14 @@ export const useEnrollmentStore = defineStore('enrollment', {
       });
 
       if (error.value) {
-        setError({ message: 'error al crear la matricula' })
+        setError({ message: 'El estudiante tiene una matricula registrada en este parelelo' })
+        return;
       }
 
       const response = data.value as IEnrollment;
       this.enrollments.push(response);
+
+      await this.getAll()
     }, 
 
     async update(id: string, values: UpdateEnrollmet) {

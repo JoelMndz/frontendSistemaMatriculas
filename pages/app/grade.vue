@@ -182,6 +182,7 @@
     selectedYear.value = currentSchoolTerm.value!._id;
   }
   
+  
   const openModalCreate = () => {
     openCreateView.value = true
   }

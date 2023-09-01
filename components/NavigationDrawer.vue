@@ -45,13 +45,13 @@ const items = [
   {
     name: 'Usuarios',
     route: '/app/user',
-    icon: 'mdi-home-city',
+    icon: 'mdi-account-group',
     role: 'admin'
   },
   {
     name: 'Estudiantes',
     route: '/app/student',
-    icon: 'mdi-home-city'
+    icon: 'mdi-account-school'
   },
   {
     name: 'Acudientes',
@@ -69,9 +69,9 @@ const items = [
     icon: 'mdi-account-check'
   },
   {
-    name: 'Curso',
+    name: 'Grado',
     route: '/app/grade',
-    icon: 'mdi-account-school'
+    icon: 'mdi-chair-school'
   },
   {
     name: 'Periodo Lectivo',

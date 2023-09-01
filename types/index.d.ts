@@ -26,6 +26,7 @@ declare global {
     description: string
     subjects: string[]
     parallels: IParallel[]
+    _schoolTerm: ISchoolTerm;
   }
 
   interface IRepresentative {
@@ -69,10 +70,17 @@ declare global {
     _id: string
     name: string
     quotas: number
-    _grade: string
+    _grade: IGrade
     _professor: string | IProfessor
     professors: IProfessor[]
-    schoolterm: ISchoolTerm[]
+    schoolterm: ISchoolTerm
+    _schoolTerm: ISchoolTerm;
+  }
+
+  interface IEnrollment {
+    _id: string;
+    _student: IStudent;
+    _parallel: IParallel;
   }
 
   interface ISession{

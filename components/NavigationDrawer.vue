@@ -65,8 +65,8 @@ const items = [
   },
   {
     name: 'Matrícula',
-    route: '/',
-    icon: 'mdi-home-city'
+    route: '/app/enrollment',
+    icon: 'mdi-account-check'
   },
   {
     name: 'Curso',

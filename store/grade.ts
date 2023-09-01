@@ -60,9 +60,15 @@ export const useGrade = defineStore('grade', {
     },
 
     async delete (id: string) {
-      await useFetchApi(`/api/grade/${id}`, {
+      const { setError } = useErrorStore();
+      const { error } = await useFetchApi(`/api/grade/${id}`, {
         method: 'DELETE'
       })
+
+      if(error.value){
+        setError({ message: 'No puedes eliminar un curso que tiene uno o mas paralelos'})
+        return;
+      }
       this.grades = this.grades.filter( grade => grade._id !== id)
     },
 

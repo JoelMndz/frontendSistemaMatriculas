@@ -28,6 +28,16 @@ export const useParallelStore = defineStore('parallels', {
   }),
   actions: {
 
+    async getAll () {
+      const { data, error } = await useFetchApi('/api/parallel', {
+        method: 'GET'
+      });
+
+      if(!error.value){
+        this.parallels = data.value as IParallel[];
+      }
+    },
+
     async create (values: CreteParallel) {
       const { setError } = useErrorStore();
       const { gradeCurrent } = useGrade();
@@ -63,7 +73,6 @@ export const useParallelStore = defineStore('parallels', {
 
       response.professors = [response._professor as IProfessor]
       gradeCurrent!.parallels = gradeCurrent!.parallels.map(parallel => parallel._id === response._id ? response : parallel)
-      console.log(response)
     },
 
     async delete (id: string) {
@@ -74,7 +83,7 @@ export const useParallelStore = defineStore('parallels', {
       }) 
 
       if(error.value){
-        setError({ message: 'ocurrio un error al eliminar el paralelo'})
+        setError({ message: 'No puedes eliminar un paralelo asociado a una matricula'})
         return;
       }
 

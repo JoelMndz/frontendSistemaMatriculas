@@ -1,5 +1,5 @@
 <template>
-  <VContainer>
+  <VContainer fluid>
     <VRow>
       <VCol>
         <VBtn @click="buttonAdd">Crear Profesor</VBtn>

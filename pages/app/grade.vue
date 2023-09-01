@@ -22,6 +22,7 @@
       <v-card
         width="300"
         class="mx-auto">
+        <Error v-if="errorMessage" :error="errorMessage" />
         <v-card-title class="headline text-center">{{
           'Confirmar eliminación'
         }}</v-card-title>
@@ -33,7 +34,7 @@
           <v-btn
             color="red darken-1"
             :disabled="loading"
-            @click="showDeleteConfirmation = false">
+            @click="closeDeleteConfirmation">
             Cancelar
           </v-btn>
           <v-btn
@@ -69,7 +70,7 @@
         <v-card-text>
           <v-chip
             class="mx-1 my-1"
-            v-for="(subject, index) in selectedGrade.subjects"
+            v-for="(subject, index) in selectedGrade?.subjects"
             :key="index">
             {{ subject }}
           </v-chip>
@@ -98,7 +99,7 @@
               md="9"
               cols="9">
               <v-card-title>{{ grade?.name }}</v-card-title>
-              <v-card-subtitle>{{ grade.description }}</v-card-subtitle>
+              <v-card-subtitle>{{ grade?.description }}</v-card-subtitle>
             </v-col>
             <v-col
               sm="3"
@@ -119,7 +120,7 @@
                     <v-list-item @click="openModalUpdate(grade)">
                       <v-list-item-title>Actualizar</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="showConfirmDeleteGrade(grade._id)">
+                    <v-list-item @click="showConfirmDeleteGrade(grade?._id)">
                       <v-list-item-title>Eliminar</v-list-item-title>
                     </v-list-item>
                   </v-list>
@@ -128,10 +129,10 @@
             </v-col>
             <v-col class="d-flex justify-end">
               <div
-                v-for="parallel in grade.parallels"
+                v-for="parallel in grade?.parallels"
                 class="circleParallels">
                 <v-card-title class="lellert">
-                  {{ parallel.name }}
+                  {{ parallel?.name }}
                 </v-card-title>
               </div>
             </v-col>
@@ -170,18 +171,26 @@
   const router = useRouter();
   const schoolTerm = useSchoolTerm();
   const selectedYear = ref();
+  const errorStore = useErrorStore();
+  const errorMessage = ref('');
+  const isConfirmationVisible = ref(false);
+
 
   await schoolTerm.getAll();
 
   const gradeList = computed(() => gradeStore.grades);
   const schoolList = computed(() => schoolTerm.schools);
   const currentSchoolTerm = computed(() => schoolTerm.schoolCurrent)
-  const defaultYear = currentSchoolTerm ? currentSchoolTerm.value!._id : null;
+  const error = computed(()=> errorStore.error);
+  const defaultYear = currentSchoolTerm ? currentSchoolTerm.value?._id : null;
 
   if (currentSchoolTerm) {
-    selectedYear.value = currentSchoolTerm.value!._id;
+    selectedYear.value = currentSchoolTerm.value?._id;
   }
-  
+
+  const closeDeleteConfirmation = () => {
+    showDeleteConfirmation.value = false;
+  }
   
   const openModalCreate = () => {
     openCreateView.value = true
@@ -224,8 +233,13 @@
   }
 
   const deleteConfirmed = async () => {
-    showDeleteConfirmation.value = false;
+    isConfirmationVisible.value = false; 
     await deteleGrade(selectedGrade.value);
+    if(error.value){
+      errorMessage.value = error.value.message;
+    } else{
+      closeModal();
+    }
   }
 
   if (defaultYear) {

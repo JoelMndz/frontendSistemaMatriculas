@@ -7,10 +7,14 @@ const gradeStore = useGrade();
 const showModalDelete = ref(false);
 const loading = ref(false);
 const router = useRouter()
+const errorStore = useErrorStore();
+const errorMessage = ref('');
+const isConfirmationVisible = ref(false);
 
 const parallelDelete = ref<IParallel | null>(null);
 const modal = computed(() => parallelStore.showForm )
 const currentParallel = computed(() =>  parallelStore.parallelCurrent)
+const error = computed(()=> errorStore.error);
 const { gradeCurrent: currentGrade } = storeToRefs(gradeStore);
 const { current: currentSchoolTerm } = storeToRefs(schoolTerm)
 
@@ -45,10 +49,15 @@ const cancelDelete = () => {
 const buttonDelete = async () => {
   try {
     loading.value = true;
+    isConfirmationVisible.value = false; 
     if(parallelDelete.value?._id)
     await parallelStore.delete(parallelDelete.value?._id);
+    if(error.value){
+      errorMessage.value = error.value.message
+    } else {
+      showModalDelete.value = false;
+    }
     loading.value = false;
-    showModalDelete.value = false;
   } catch (error) {
     console.log(error);
   }
@@ -78,8 +87,7 @@ onMounted(() => {
             cols="12"
             lg="4"
             sm="6"
-            v-for="paralell in currentGrade?.parallels"
-            :key="paralell._id">
+            v-for="paralell in currentGrade?.parallels">
             <v-card>
                 <VRow>
                   <VCol sm="9" md="9" cols="9">
@@ -127,6 +135,7 @@ onMounted(() => {
         <v-card
           width="300"
           class="mx-auto">
+          <Error v-if="errorMessage" :error="errorMessage" />
           <v-card-title class="headline text-center">
             Confirmar eliminación
           </v-card-title>

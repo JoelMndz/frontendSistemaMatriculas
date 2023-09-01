@@ -83,7 +83,7 @@ export const useParallelStore = defineStore('parallels', {
       }) 
 
       if(error.value){
-        setError({ message: 'ocurrio un error al eliminar el paralelo'})
+        setError({ message: 'No puedes eliminar un paralelo asociado a una matricula'})
         return;
       }
 

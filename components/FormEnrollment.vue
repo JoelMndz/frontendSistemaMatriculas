@@ -7,7 +7,7 @@
       <v-card-title class="text-center text-subtitle-h4">
         {{ idEnrollment ? 'Actualizar' : 'Crear' }}
       </v-card-title>
-      <Error /> 
+      <Error v-if="errorMessage" :error="errorMessage" /> 
       <VForm
         class="mt-2"
         ref="form"
@@ -19,14 +19,17 @@
           v-model="formData._parallel"
           :items="optionParallelsAndCourses"
           item-title="name"
+          :rules="rules.parallel"
           item-value="_id"
           variant="underlined"/>
         
         <v-autocomplete 
           label="Estudiantes"
+          class="mt-4"
           v-model="formData._student"
           :items="students"
           item-title="fullName"
+          :rules="rules.student"
           item-value="_id"
           variant="underlined"/>
 
@@ -55,18 +58,19 @@
 </template>
 
 <script lang="ts" setup>
+import { storeToRefs } from 'pinia';
 import { VForm } from 'vuetify/lib/components/index.mjs';
 const errorStore = useErrorStore();
 const listStudents = useStudentStore();
 const listParallels = useParallelStore();
 const enrollmentStore = useEnrollmentStore();
-const listParrallels = useParallelStore();
-const schoolTerm = useSchoolTerm();
-
+const schoolTermStore = useSchoolTerm();
+const errorMessage = ref('');
+const isConfirmationVisible = ref(false);
 const loading = ref(false);
 
 await listStudents.getAll();
-await listParrallels.getAll();
+await listParallels.getAll();
 
 const props = defineProps({
   enrollment: Object as () => IEnrollment | null
@@ -74,21 +78,23 @@ const props = defineProps({
 
 const idEnrollment = props.enrollment?._id;
 
-const error = computed(() => errorStore.error);
-const students = computed(() => listStudents.students);
-const parallels = computed(() => listParallels.parallels);
-const currentSchoolTerm = computed(() => schoolTerm.schoolCurrent)
+const { parallels } = storeToRefs(listParallels);
+const { students } = storeToRefs(listStudents);
+const { error } = storeToRefs(errorStore);
+const { schoolCurrent } = storeToRefs(schoolTermStore);
 
 const optionParallelsAndCourses = computed(() => {
-  const options =  parallels.value.filter(parallel => {
-    return parallel?._schoolTerm?._id === currentSchoolTerm.value?._id;
-  }).map(parallel => {
-    const nameParallel = parallel?.name || 'n/a';
-    const nameCourse = parallel?._grade?.name || 'n/a';
-    const parallelAndCourse = `${nameCourse} - ${nameParallel}`;
-    const idParallel = parallel?._id;
+  const currentSchoolTerm = schoolCurrent.value;
+  const options = parallels.value
+    .filter(term => term._schoolTerm._id === currentSchoolTerm?._id)
+    .map(parallel => {
+      const nameParallel = parallel?.name || 'n/a';
+      const nameCourse = parallel?._grade?.name || 'n/a';
+      const yearSchoolTerm = parallel?._schoolTerm?.name || 'n/a';
+      const parallelAndCourse = `${nameCourse} - ${nameParallel} - ${yearSchoolTerm}`;
+      const idParallel = parallel?._id;
 
-    return { _id: idParallel, name: parallelAndCourse};
+      return { _id: idParallel, name: parallelAndCourse};
   })
   return options;
 })
@@ -104,23 +110,27 @@ const formData = reactive<IFormData>({
   _student: ''
 })
 
-
 const handleSubmit = async () => {
   loading.value = true;
   errorStore.resetError()
   const { valid } = await form.value!.validate();
   if (valid){
     if(!props.enrollment){
+      isConfirmationVisible.value = false;
       await enrollmentStore.create(formData);
     } else {
       // update
     }
-    if(!error.value) closeModal();
+    if(error.value){
+      errorMessage.value = error.value.message;
+    } else{
+      closeModal();
+    } 
   }
   loading.value = false;
 }
 const rules = {
-  professor: [ (value: string) => { return !!value || 'Seleccion un profesor'}
+  student: [ (value: string) => { return !!value || 'Seleccion un estudiante'}
   ],
   parallel: [ (value: string) => { return !!value || 'Seleccione un paralelo'}]
 }

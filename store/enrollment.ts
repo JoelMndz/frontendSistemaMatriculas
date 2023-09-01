@@ -44,7 +44,7 @@ export const useEnrollmentStore = defineStore('enrollment', {
       });
 
       if (error.value) {
-        setError({ message: 'El estudiante tiene una matricula registrada en este parelelo' })
+        setError({ message: 'El estudiante ya esta matriculado en un paralelo'})
         return;
       }
 
@@ -72,12 +72,12 @@ export const useEnrollmentStore = defineStore('enrollment', {
     },
 
     async delete(id: string) {
-      const { data } = await useFetchApi(`/api/enrollment/${id}`, {
+      await useFetchApi(`/api/enrollment/${id}`, {
         method: 'DELETE'
       })
       
-      const response = data.value as IEnrollment
-      this.enrollments = this.enrollments.filter(enrollment => enrollment._id !== response._id)
+      this.enrollments = this.enrollments.filter(enrollment => enrollment._id !== id)
+      console.table(this.enrollments)
     },
 
     setCurrentEnrollment(enrollment: IEnrollment | null) {

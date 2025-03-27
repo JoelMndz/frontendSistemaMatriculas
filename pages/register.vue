@@ -53,7 +53,7 @@
             @click="register"
             width="400"
             :loading="loading"
-            >Regitrar</v-btn
+            >Registrar</v-btn
           >
           <div class="mt-3">
             <NuxtLink
